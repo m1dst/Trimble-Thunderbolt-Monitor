@@ -4810,7 +4810,7 @@ Source: www.kingbright.com</description>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
-<part name="TRIMLCD" library="SparkFun" deviceset="POT" device="TRIM" value="10K"/>
+<part name="TRIMLCD" library="SparkFun" deviceset="POT" device="100K_3362U" value="10K"/>
 <part name="R7" library="SparkFun" deviceset="RESISTOR" device="AXIAL-0.3" value="4.7K"/>
 <part name="R8" library="SparkFun" deviceset="RESISTOR" device="AXIAL-0.3" value="10K"/>
 <part name="P+3" library="supply1" deviceset="+5V" device=""/>
