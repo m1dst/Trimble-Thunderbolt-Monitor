@@ -117,12 +117,13 @@
 voltage selector</text>
 <text x="80.645" y="50.165" size="0.8128" layer="21" rot="R180">RS232 to Trimble</text>
 <text x="40.64" y="42.545" size="0.8128" layer="21" rot="R180">Reset</text>
-<text x="29.845" y="76.2" size="0.8128" layer="21" rot="R180">Contrast</text>
+<text x="25.4" y="77.47" size="0.8128" layer="21" rot="R270">Contrast</text>
 <text x="23.495" y="71.12" size="0.8128" layer="21" rot="R270">LEDs
 1) Power
 2) RS232
 3) Minor Alarm
 4) Major Alarm</text>
+<text x="79.375" y="55.88" size="0.8128" layer="21" rot="R180">(2)   (3)   (5)</text>
 </plain>
 <libraries>
 <library name="SparkFun">
