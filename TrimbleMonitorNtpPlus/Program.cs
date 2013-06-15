@@ -193,7 +193,7 @@ namespace TrimbleMonitorNtpPlus
             _lcdshield.WriteLine(0, "Trimble Thunderbolt", TextAlign.Centre);
             _lcdshield.WriteLine(1, "Monitor (M1DST)", TextAlign.Centre);
             _lcdshield.WriteLine(2, "www.m1dst.co.uk", TextAlign.Centre);
-            _lcdshield.WriteLine(3, "Version 1.0.2", TextAlign.Centre);
+            _lcdshield.WriteLine(3, "Version 1.0.3", TextAlign.Centre);
         }
 
         static void DisplayNoSerialDataScreen()
@@ -228,14 +228,14 @@ namespace TrimbleMonitorNtpPlus
             _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
 
             _lcdshield.SetCursorPosition(0, 1);
-            var s = "Lat:  " + _thunderbolt.CurrentPosition.Latitude.ToString("N4");
+            var s = "Lat: " + StringExtension.PadLeft(_thunderbolt.CurrentPosition.Latitude.ToString("N4"), 8);
             _lcdshield.Write(s);
             _lcdshield.WriteByte(7);
             _lcdshield.Write(StringExtension.PadLeft("", 16 - (s.Length + 1)));
             _lcdshield.Write("Alt:");
 
             _lcdshield.SetCursorPosition(0, 2);
-            s = "Lon:  " + _thunderbolt.CurrentPosition.Longitude.ToString("N4");
+            s = "Lon: " + StringExtension.PadLeft(_thunderbolt.CurrentPosition.Longitude.ToString("N4"), 8);
             _lcdshield.Write(s);
             _lcdshield.WriteByte(7);
             _lcdshield.Write(StringExtension.PadLeft("", 14 - (s.Length + 1)));
