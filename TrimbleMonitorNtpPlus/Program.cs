@@ -228,14 +228,14 @@ namespace TrimbleMonitorNtpPlus
             _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
 
             _lcdshield.SetCursorPosition(0, 1);
-            var s = "Lat: " + StringExtension.PadLeft(_thunderbolt.CurrentPosition.Latitude.ToString("N4"), 8);
+            var s = "Lat:" + StringExtension.PadLeft(_thunderbolt.CurrentPosition.Latitude.ToString("N4"), 9);
             _lcdshield.Write(s);
             _lcdshield.WriteByte(7);
             _lcdshield.Write(StringExtension.PadLeft("", 16 - (s.Length + 1)));
             _lcdshield.Write("Alt:");
 
             _lcdshield.SetCursorPosition(0, 2);
-            s = "Lon: " + StringExtension.PadLeft(_thunderbolt.CurrentPosition.Longitude.ToString("N4"), 8);
+            s = "Lon:" + StringExtension.PadLeft(_thunderbolt.CurrentPosition.Longitude.ToString("N4"), 9);
             _lcdshield.Write(s);
             _lcdshield.WriteByte(7);
             _lcdshield.Write(StringExtension.PadLeft("", 14 - (s.Length + 1)));
