@@ -5467,7 +5467,6 @@ Source: www.kingbright.com</description>
 <errors>
 <approved hash="202,1,96.52,60.96,U2,T2IN,,,,"/>
 <approved hash="202,1,132.08,55.88,U2,R2IN,,,,"/>
-<approved hash="115,1,6.54473,84.4973,JP3,,,,,"/>
 </errors>
 </schematic>
 </drawing>

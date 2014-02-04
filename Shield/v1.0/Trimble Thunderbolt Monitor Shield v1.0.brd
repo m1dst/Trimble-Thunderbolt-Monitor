@@ -750,16 +750,16 @@ design rules under a new name.</description>
 <element name="GND" library="SparkFun" package="DUEMILANOVE_SHIELD" value="ARDUINO_SHIELDLABEL" x="22.86" y="92.71" rot="R270"/>
 <element name="JP1" library="pinhead" package="1X16" value="HD44780" x="45.72" y="83.82"/>
 <element name="U2" library="SparkFun" package="DIL16" value="MAX232PTH" x="74.93" y="68.58" rot="R270"/>
-<element name="S2" library="SparkFun" package="TACTILE-PTH" value="UP" x="29.21" y="52.07" smashed="yes">
+<element name="S2" library="SparkFun" package="TACTILE-PTH" value="" x="29.21" y="52.07" smashed="yes">
 <attribute name="NAME" x="32.385" y="51.435" size="1.27" layer="25" ratio="10"/>
 </element>
-<element name="S3" library="SparkFun" package="TACTILE-PTH" value="DOWN" x="29.21" y="44.45" smashed="yes">
+<element name="S3" library="SparkFun" package="TACTILE-PTH" value="" x="29.21" y="44.45" smashed="yes">
 <attribute name="NAME" x="32.385" y="43.815" size="1.27" layer="25" ratio="10"/>
 </element>
-<element name="S4" library="SparkFun" package="TACTILE-PTH" value="LEFT" x="39.37" y="52.07" smashed="yes">
+<element name="S4" library="SparkFun" package="TACTILE-PTH" value="" x="39.37" y="52.07" smashed="yes">
 <attribute name="NAME" x="42.545" y="51.435" size="1.27" layer="25" ratio="10"/>
 </element>
-<element name="S5" library="SparkFun" package="TACTILE-PTH" value="SELECT" x="58.42" y="52.07" smashed="yes">
+<element name="S5" library="SparkFun" package="TACTILE-PTH" value="" x="58.42" y="52.07" smashed="yes">
 <attribute name="NAME" x="61.595" y="51.435" size="1.27" layer="25" ratio="10"/>
 </element>
 <element name="R1" library="SparkFun" package="AXIAL-0.3" value="2K" x="54.61" y="60.96"/>
@@ -791,7 +791,7 @@ design rules under a new name.</description>
 <element name="C2" library="SparkFun" package="CPOL-RADIAL-10UF-25V" value="1uF" x="66.04" y="68.58" rot="R90"/>
 <element name="C3" library="SparkFun" package="CPOL-RADIAL-10UF-25V" value="1uF" x="74.93" y="82.55" rot="R180"/>
 <element name="C4" library="SparkFun" package="CPOL-RADIAL-10UF-25V" value="1uF" x="66.04" y="62.23" rot="R270"/>
-<element name="S1" library="SparkFun" package="TACTILE-PTH" value="RIGHT" x="49.53" y="52.07" smashed="yes">
+<element name="S1" library="SparkFun" package="TACTILE-PTH" value="" x="49.53" y="52.07" smashed="yes">
 <attribute name="NAME" x="52.705" y="51.435" size="1.27" layer="25" ratio="10"/>
 </element>
 <element name="R9" library="SparkFun" package="AXIAL-0.3" value="330" x="50.8" y="76.2" rot="R90"/>
