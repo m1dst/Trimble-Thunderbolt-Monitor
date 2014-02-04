@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -124,7 +124,7 @@ voltage selector</text>
 2) RS232
 3) Minor Alarm
 4) Major Alarm</text>
-<text x="79.375" y="55.88" size="0.762" layer="21" font="vector" rot="R180">(2) (3) (5)</text>
+<text x="79.375" y="55.88" size="0.762" layer="21" font="vector" rot="R180">(3) (2) (5)</text>
 </plain>
 <libraries>
 <library name="SparkFun">

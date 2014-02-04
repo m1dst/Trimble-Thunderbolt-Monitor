@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -4788,10 +4788,10 @@ Source: www.kingbright.com</description>
 <part name="GND" library="SparkFun" deviceset="ARDUINO_SHIELD" device="LABEL"/>
 <part name="JP1" library="pinhead" deviceset="PINHD-1X16" device="" value="HD44780"/>
 <part name="U2" library="SparkFun" deviceset="MAX232" device="PTH"/>
-<part name="S2" library="SparkFun" deviceset="TAC_SWITCH" device="PTH" value="UP"/>
-<part name="S3" library="SparkFun" deviceset="TAC_SWITCH" device="PTH" value="DOWN"/>
-<part name="S4" library="SparkFun" deviceset="TAC_SWITCH" device="PTH" value="LEFT"/>
-<part name="S5" library="SparkFun" deviceset="TAC_SWITCH" device="PTH" value="SELECT"/>
+<part name="S2" library="SparkFun" deviceset="TAC_SWITCH" device="PTH"/>
+<part name="S3" library="SparkFun" deviceset="TAC_SWITCH" device="PTH"/>
+<part name="S4" library="SparkFun" deviceset="TAC_SWITCH" device="PTH"/>
+<part name="S5" library="SparkFun" deviceset="TAC_SWITCH" device="PTH"/>
 <part name="+3V1" library="supply1" deviceset="+3V3" device=""/>
 <part name="P+1" library="supply1" deviceset="+5V" device=""/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
@@ -4826,7 +4826,7 @@ Source: www.kingbright.com</description>
 <part name="C3" library="SparkFun" deviceset="CAP_POL" device="PTH2" value="1uF"/>
 <part name="C4" library="SparkFun" deviceset="CAP_POL" device="PTH2" value="1uF"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
-<part name="S1" library="SparkFun" deviceset="TAC_SWITCH" device="PTH" value="RIGHT"/>
+<part name="S1" library="SparkFun" deviceset="TAC_SWITCH" device="PTH"/>
 <part name="R9" library="SparkFun" deviceset="RESISTOR" device="AXIAL-0.3" value="330"/>
 <part name="R10" library="SparkFun" deviceset="RESISTOR" device="AXIAL-0.3" value="330"/>
 <part name="GND10" library="supply1" deviceset="GND" device=""/>
