@@ -110,15 +110,15 @@
 <wire x1="83.165" y1="38.735" x2="83.165" y2="93.015" width="0" layer="20"/>
 <wire x1="83.165" y1="93.015" x2="22.225" y2="93.015" width="0" layer="20"/>
 <wire x1="22.225" y1="93.015" x2="22.225" y2="38.735" width="0" layer="20"/>
-<text x="69.85" y="81.915" size="1.27" layer="21" rot="R180">Thunderbolt Monitor</text>
-<text x="53.34" y="78.74" size="1.27" layer="21">http://www.m1dst.co.uk</text>
+<text x="69.85" y="81.915" size="1.016" layer="21" ratio="9" rot="R180">Thunderbolt Monitor</text>
+<text x="53.34" y="78.74" size="1.016" layer="21" ratio="10">http://www.m1dst.co.uk</text>
 <text x="58.42" y="74.295" size="1.6764" layer="22" font="vector" rot="MR0">http://www.m1dst.co.uk</text>
-<text x="80.645" y="50.419" size="1.016" layer="21" rot="R180">RS232 to Trimble
+<text x="80.645" y="50.419" size="0.8128" layer="21" ratio="10" rot="R180">RS232 to Trimble
 9600 8N1</text>
 <text x="40.64" y="42.545" size="1.016" layer="21" rot="R180">RST</text>
-<text x="24.892" y="78.867" size="1.27" layer="21" rot="R270">Contrast</text>
-<text x="80.01" y="56.134" size="1.27" layer="21" rot="R180">(3) (2) (5)</text>
-<text x="62.865" y="78.105" size="1.4224" layer="21" rot="R180">V1.1</text>
+<text x="24.892" y="78.867" size="1.016" layer="21" ratio="10" rot="R270">Contrast</text>
+<text x="80.01" y="56.134" size="1.524" layer="21" ratio="12" rot="R180">3 2 5</text>
+<text x="62.865" y="78.105" size="1.27" layer="21" ratio="11" rot="R180">V1.1</text>
 </plain>
 <libraries>
 <library name="SparkFun">
