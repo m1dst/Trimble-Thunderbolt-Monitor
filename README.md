@@ -11,5 +11,3 @@ Blog posts can be found at http://www.m1dst.co.uk/category/projects/trimble-thun
 Contains an NTP server implementation which allows you to sync your computer clock with the Trimble Thunderbolt.
 
 You can now buy this as a kit from [http://www.m1dst.co.uk/shop/thunderbolt-monitor-kit/](http://www.m1dst.co.uk/shop/thunderbolt-monitor-kit/)
-
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/ee18d42d9132c94cd4dbf73098c89bdb "githalytics.com")](http://githalytics.com/m1dst/Trimble-Thunderbolt-Monitor)
