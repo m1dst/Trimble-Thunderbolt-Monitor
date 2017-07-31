@@ -987,19 +987,35 @@ namespace TrimbleMonitorNtpPlus.Thunderbolt
             Debug.Print(":0x8F.AB (Primary Timing)");
 
             UInt32 pri_tow = tp.GetNextDWord();
-            UInt16 pri_gps_week = tp.GetNextWord();
-            Int16 pri_utc_offset = (short)tp.GetNextWord();
+            ushort pri_gps_week = tp.GetNextWord();
+            pri_gps_week += 1024; // We needed to correct the GPS Week.  See below.
+
+            // This field represents the current GPS week number. GPS week number 0 started on January 6, 1980.
+            // Unfortunately, the GPS system has allotted only 10-bits of information to carry the GPS week number and 
+            // therefore it rolls-over to 0 in just 1024 weeks (19.6 years,) and there is no mechanism built into GPS to 
+            // tell the user to which 1024 week epoch the week number refers. The first week number roll-over occured
+            // as August 21, 1999 (GPS) transitioned to August 22, 1999 (GPS).
+            // The ThunderBolt adjusted for this week rollover by adding 1024 to any week number reported by GPS which is 
+            // less that week number 936 which began on December 14, 1997. With this technique, the ThunderBolt  
+            // provided an accurate translation of GPS week number and TOW to time and date until July 30, 2017.
+
+            // Now it has passed July 30, 2017 we need to provide the same fix but in our code.  The Thunderbolt can no longer be trusted!
+
+            short pri_utc_offset = (short)tp.GetNextWord();
             byte time_flags = tp.GetNextByte();
             byte pri_seconds = tp.GetNextByte();
             byte pri_minutes = tp.GetNextByte();
             byte pri_hours = tp.GetNextByte();
             byte pri_day = tp.GetNextByte();
             byte pri_month = tp.GetNextByte();
-            UInt16 pri_year = tp.GetNextWord();
+            ushort pri_year = tp.GetNextWord();
+
             try
             {
+                
                 // if this fires an execption, just skip the bad packet
-                current_time = new DateTime(pri_year, pri_month, pri_day, pri_hours, pri_minutes, pri_seconds);
+                //current_time = new DateTime(pri_year, pri_month, pri_day, pri_hours, pri_minutes, pri_seconds);  // This is no longer reliable.
+                current_time = new DateTime(1980, 1, 6).AddDays(pri_gps_week * 7).AddSeconds(pri_tow - pri_utc_offset); // We have to calculate the time ourselves.
 
                 tow = pri_tow;
                 utc_offset = pri_utc_offset;
