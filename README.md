@@ -1,3 +1,5 @@
+**ATTENTION: If you are already running this project you must update to v1.0.4 which corrects the problem where the date rolls back to 1997.  The Trimble Thunderbolt will have stopped reporting the correct time from July 30th 2017 for any hardware/software which reads its data unless it is aware of the rollover.**
+
 This is a hardware and software project to monitor and command a [Trimble Thunderbolt](http://www.trimble.com/timing/thunderbolt-e.aspx) which is a GPS disciplined 10MHz reference.
 
 The software runs on a [Netduino](http://netduino.com/) which is a .NET version of the popular Arduino platform.  It also includes a shield to make connecting it up to the Netduino much cleaner.  I have designed the shield to be compatible with both Netduino and Arduino in case someone wants to write code for the other platform.
