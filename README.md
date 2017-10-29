@@ -6,13 +6,13 @@ Data packets appearing on Thunderbolt's serial port are in Trimble Standard Inte
 
 Ideal for amateur radio applications, Thunderbolt Display shows Time Of Day (UTC) to assist with logging contacts, and also calculates Maidenhead Grid Locator Square from the current latitude and longitude.
 
-The software runs on a [Netduino](http://netduino.com/) or [GHI FEZ Lemur](http://ghielectronics.com/) which is a .NET version of the popular Arduino platform.  It also requires a shield to make connecting it up to the microcontroller much cleaner.  I have designed the shield to be compatible with both Netduino and Arduino in case *someone wants to write code for the other platform.*
+The software runs on a [Netduino](https://www.wildernesslabs.co/) or [GHI FEZ Lemur](http://ghielectronics.com/) which is a .NET version of the popular Arduino platform.  It also requires a shield to make connecting it up to the microcontroller much cleaner.  I have designed the shield to be compatible with both Netduino and Arduino in case *someone wants to write code for the other platform.*
 
 There are **three** projects in this repo.
 
 * TrimbleMonitor (Fez Lemur) – Basic monitor for the GHI FEZ Lemur (No NTP)
-* TrimbleMonitor (Netduino) – Basic monitor for any Netduino 1,2,3 (No NTP)
-* TrimbleMonitor (Netduno Plus) – Monitor with NTP support for a Netduino 2+/3+
+* TrimbleMonitor (Netduino) – Basic monitor for any Netduino 1, 2, 3 (No NTP)
+* TrimbleMonitor (Netduno Plus) – Monitor with NTP support for a Netduino 2+ / 3 Ethernet / 3 WiFi
 
 The board must be running [.NET Micro Framework 4.3](http://netmf.codeplex.com/releases/view/611040).
 
