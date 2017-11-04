@@ -14,7 +14,7 @@ There are **three** projects in this repo.
 * TrimbleMonitor (Netduino) – Basic monitor for any Netduino 1, 2, 3 (No NTP)
 * TrimbleMonitor (Netduno Plus) – Monitor with NTP support for a Netduino 2+ / 3 Ethernet / 3 WiFi
 
-The board must be running [.NET Micro Framework 4.3](http://netmf.codeplex.com/releases/view/611040).
+The board must be running [.NET Micro Framework 4.3](http://netmf.codeplex.com/releases/view/611040).  You should use Visual Studio 2013 for this project.  More information can be found within the instructions document.
 
 Blog posts can be found at http://www.m1dst.co.uk/category/projects/trimble-thunderbolt-monitor/
 
