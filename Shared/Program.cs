@@ -53,7 +53,7 @@ namespace TrimbleMonitor
 #if(FEZLEMUR)
             _thunderbolt = new ThunderBolt("COM1", AngleUnits.Degrees, AltitudeUnits.Meters, new OutputPort(GHI.Pins.FEZLemur.Gpio.D13, false));
 #endif
-            
+
 #if(NTP)
             _ntpServer = new NtpServer();
 #endif
@@ -141,11 +141,9 @@ namespace TrimbleMonitor
 #if(NTP)
                     case 5:
 #endif
-                        {
-                            string mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
-                            _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
-                        }
-                        break;
+                        string mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
+                        _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
+                    break;
                 }
             }
         }
@@ -221,7 +219,7 @@ namespace TrimbleMonitor
             _lcdshield.WriteLine(0, "Trimble Thunderbolt", TextAlign.Centre);
             _lcdshield.WriteLine(1, "Monitor (M1DST)", TextAlign.Centre);
             _lcdshield.WriteLine(2, "www.m1dst.co.uk", TextAlign.Centre);
-            _lcdshield.WriteLine(3, "Version 1.0.5", TextAlign.Centre);
+            _lcdshield.WriteLine(3, "Version 1.0.6", TextAlign.Centre);
         }
 
         static void DisplayNoSerialDataScreen()
@@ -253,9 +251,10 @@ namespace TrimbleMonitor
             }
             else
             {
-                _lcdshield.WriteLine(3, StringExtension.PadLeft(GetAlarmIndicatorString(), 20));
+                var uptime = PowerState.Uptime;
+                _lcdshield.WriteLine(3, StringExtension.PadRight("Up:" + StringExtension.PadLeft(uptime.Days.ToString(), 4) + "D:" + StringExtension.PadLeft(uptime.Hours.ToString(), 2, '0') + "H:" + StringExtension.PadLeft(uptime.Minutes.ToString(), 2, '0') + "M", 17) + GetAlarmIndicatorString());
             }
-            
+
         }
 
         static void DisplayScreenThree()
