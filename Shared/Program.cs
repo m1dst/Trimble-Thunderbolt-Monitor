@@ -221,7 +221,7 @@ namespace TrimbleMonitor
             _lcdshield.WriteLine(0, "Trimble Thunderbolt", TextAlign.Centre);
             _lcdshield.WriteLine(1, "Monitor (M1DST)", TextAlign.Centre);
             _lcdshield.WriteLine(2, "www.m1dst.co.uk", TextAlign.Centre);
-            _lcdshield.WriteLine(3, "Version 1.0.4", TextAlign.Centre);
+            _lcdshield.WriteLine(3, "Version 1.0.5", TextAlign.Centre);
         }
 
         static void DisplayNoSerialDataScreen()
@@ -247,7 +247,15 @@ namespace TrimbleMonitor
             _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
             _lcdshield.WriteLine(1, " RX M: " + EnumerationStrings.ReceiverModeString(_thunderbolt.ReceiverMode));
             _lcdshield.WriteLine(2, "DscpM: " + EnumerationStrings.DiscipliningModeString(_thunderbolt.DisciplineMode));
-            _lcdshield.WriteLine(3, "Survey: " + StringExtension.PadRight(StringExtension.PadLeft(_thunderbolt.SurveyProgress + "%", 4), 9) + GetAlarmIndicatorString());
+            if (_isSurveyInProgress)
+            {
+                _lcdshield.WriteLine(3, "Survey: " + StringExtension.PadRight(StringExtension.PadLeft(_thunderbolt.SurveyProgress + "%", 4), 9) + GetAlarmIndicatorString());
+            }
+            else
+            {
+                _lcdshield.WriteLine(3, StringExtension.PadLeft(GetAlarmIndicatorString(), 20));
+            }
+            
         }
 
         static void DisplayScreenThree()
