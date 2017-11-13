@@ -18,57 +18,56 @@ namespace TrimbleMonitor.Thunderbolt
         private SerialPort m_port;
         public static OutputPort _activityLed;
 
-        private string level_type;
+        private string _levelType;
         /// <summary>
         /// tbd
         /// </summary>
         public string LevelType
         {
-            get { return level_type; }
-            // set { level_type = value; }
+            get { return _levelType; }
         }
 
-        private VersionInfo unit_firmware = new VersionInfo();
-        private VersionInfo unit_hardware = new VersionInfo();
-        private VersionInfo unit_build = new VersionInfo();
+        private VersionInfo _firmwareVersion = new VersionInfo();
+        private VersionInfo _hardwareVersion = new VersionInfo();
+        private VersionInfo _buildVersion = new VersionInfo();
 
-        private bool unit_pps;
-        private bool unit_osc_polarity;
-        private byte unit_pps_mode;
+        private bool _pps;
+        private bool _oscPolarity;
+        private byte _ppsMode;
         private byte unit_survey_save;
         private UInt32 unit_survey_length;
 
-        private ReceiverMode receiver_mode = ReceiverMode.Unknown;
+        private ReceiverMode _receiverMode = ReceiverMode.Unknown;
         /// <summary>
         /// Returns or sets the current mode of the receiver
         /// </summary>
         public ReceiverMode ReceiverMode
         {
-            get { return receiver_mode; }
+            get { return _receiverMode; }
             set
             {
-                receiver_mode = value;
+                _receiverMode = value;
                 set_rcvr_config();
             }
         }
 
-        private DiscipliningMode discipline_mode = DiscipliningMode.Unknown;
+        private DiscipliningMode _disciplineMode = DiscipliningMode.Unknown;
         /// <summary>
         /// Returns the current disciplining mode of the receiver
         /// </summary>
         public DiscipliningMode DisciplineMode
         {
-            get { return discipline_mode; }
-            set { discipline_mode = value; }
+            get { return _disciplineMode; }
+            set { _disciplineMode = value; }
         }
 
-        private byte survey_progress;
+        private byte _surveyProgress;
         /// <summary>
         /// Returns current survey progress (0-100%)
         /// </summary>
         public byte SurveyProgress
         {
-            get { return survey_progress; }
+            get { return _surveyProgress; }
         }
 
         public bool IsSurveyInProgress()
@@ -76,126 +75,126 @@ namespace TrimbleMonitor.Thunderbolt
             return ((MinorAlarms & 0x20) == 0x20);
         }
 
-        private UInt32 holdover;
+        private UInt32 _holdoverDuration;
 
         /// <summary>
         /// Returns current Holdover Duration (secs)
         /// </summary>
         public UInt32 HoldoverDuration
         {
-            get { return holdover; }
+            get { return _holdoverDuration; }
         }
 
-        private UInt16 critical_alarms;
+        private UInt16 _criticalAlarms;
         /// <summary>
         /// Returns current Critical alarm bit field.
         /// </summary>
         public UInt16 CriticalAlarms
         {
-            get { return critical_alarms; }
+            get { return _criticalAlarms; }
         }
 
-        private UInt16 minor_alarms;
+        private UInt16 _minorAlarms;
         /// <summary>
         /// Returns current Minor alarm bit field
         /// </summary>
         public UInt16 MinorAlarms
         {
-            get { return minor_alarms; }
+            get { return _minorAlarms; }
         }
 
-        private ReceiverStatus gps_status = ReceiverStatus.Unknown;
+        private ReceiverStatus _gpsReceiverStatus = ReceiverStatus.Unknown;
         /// <summary>
         /// Returns current GPS receiver status
         /// </summary>
-        public ReceiverStatus ReceiverStatus
+        public ReceiverStatus GpsReceiverReceiverStatus
         {
-            get { return gps_status; }
+            get { return _gpsReceiverStatus; }
         }
 
-        private DiscipliningActivity discipline;
+        private DiscipliningActivity _disciplineActivity;
         /// <summary>
         /// Returns current disciplining activity
         /// </summary>
         public DiscipliningActivity DisciplineActivity
         {
-            get { return discipline; }
+            get { return _disciplineActivity; }
         }
 
-        private Single pps_offset;
+        private Single _ppsOffset;
         /// <summary>
         /// Returns an estimate of the offset of the PPS output relative to UTC or GPS as
         /// reported by the GPS receiver in nanoseconds. A positive values indicate that 
         /// the receiver's PPS is coming out late relative to GPS or UTC.
         /// </summary>
-        public Single PPS_Offset
+        public Single PpsOffset
         {
-            get { return pps_offset; }
+            get { return _ppsOffset; }
         }
 
-        private Single osc_offset;
+        private Single _oscOffset;
         /// <summary>
         /// Returns an estimate of the frequency offset of the 10MHz output relative to
         /// UTC or GPS as reported by the GPS receiver in ppb (parts-per-billion.) Positive values
         /// indicate that the receiver's clock is running slow relative to GPS or UTC.
         /// </summary>
-        public Single Osc_Offset
+        public Single OscOffset
         {
-            get { return osc_offset; }
+            get { return _oscOffset; }
         }
 
-        private UInt32 dac_value;
+        private UInt32 _dacValue;
         /// <summary>
         /// Returns current numeric value of the DAC used to produce the voltage that
         /// controls the frequency of the 10MHz oscillator.
         /// </summary>
-        public UInt32 DAC_Value
+        public UInt32 DacValue
         {
-            get { return dac_value; }
+            get { return _dacValue; }
         }
 
-        private Single dac_voltage;
+        private Single _dacVoltage;
         /// <summary>
         /// Returns current voltage output of the DAC
         /// </summary>
-        public Single DAC_Voltage
+        public Single DacVoltage
         {
-            get { return dac_voltage; }
+            get { return _dacVoltage; }
         }
 
-        private Single temperature;
+        private Single _temperature;
         /// <summary>
         /// Returns the current temperature (in Celsius) as reported by the receiver's 
         /// on-board temperature sensor
         /// </summary>
         public Single Temperature
         {
-            get { return temperature; }
+            get { return _temperature; }
         }
 
-        private Position position;
+        private Position _currentPosition;
         private Position last_position;
 
         public SatInfo[] Satellites = new SatInfo[32];
 
-        private DateTime current_time;
+        private DateTime _currentTime;
         private DateTime last_current_time;
 
-        private UInt32 tow;
-        private TimeType time_value;
-        private UInt16 gps_week;
-        private Int16 utc_offset;
+        private UInt32 _timeOfWeek;
+        private TimeType _timeValue;
+        private UInt16 _gpsWeek;
+        private Int16 _utcOffset;
 
-        private Single unit_damping_factor = 0;
-        private Single unit_osc_gain = 0;
-        private Single unit_min_volts = 0;
-        private Single unit_max_volts = 0;
-        private Single unit_jam_sync = 0;
-        private Single unit_max_freq_offset = 0;
-        private Single unit_initial_voltage = 0;
-        private Single unit_time_constant = 0;
+        private Single _dampingFactor = 0;
+        private Single _oscGain = 0;
+        private Single _minVolts = 0;
+        private Single _maxVolts = 0;
+        private Single _jamSync = 0;
+        private Single _maximumFrequencyOffset = 0;
+        private Single _initialVoltage = 0;
+        private Single _timeConstant = 0;
 
-        private Double unit_cable_delay;
+        private Double _cableDelay;
         private byte pv_filter;
         private byte static_filter;
         private byte altitude_filter;
@@ -222,7 +221,7 @@ namespace TrimbleMonitor.Thunderbolt
         public event VersionInfoEventHandler SoftwareVersionInfoReceived;
         public event VersionInfoEventHandler FirmwareVersionInfoReceived;
         public event VersionInfoEventHandler HardwareVersionInfoReceived;
-        public event GPSTimeReceivedEventHandler GPSTimeReceived;
+        public event GpsTimeReceivedEventHandler GpsTimeReceived;
         //public event ThunderBoltEventHandler ThunderboltNotReceivingDataError;
         //public event ThunderBoltEventHandler ThunderboltNotReceivingDataErrorCleared;
 
@@ -250,7 +249,7 @@ namespace TrimbleMonitor.Thunderbolt
 
             PacketProcessing = new Thread(new ThreadStart(worker_thread));
 
-            position = new Position(au, tu);
+            _currentPosition = new Position(au, tu);
             last_position = new Position(au, tu);
             m_port = new SerialPort(portName, 9600, Parity.None, 8, StopBits.One);
             m_port.DataReceived += new SerialDataReceivedEventHandler(m_port_DataReceived);
@@ -573,18 +572,18 @@ namespace TrimbleMonitor.Thunderbolt
         /// </summary>
         public DateTime CurrentTime
         {
-            get { return current_time; }
+            get { return _currentTime; }
         }
 
         public Single TimeConstant
         {
             get
             {
-                return unit_time_constant;
+                return _timeConstant;
             }
             set
             {
-                unit_time_constant = value;
+                _timeConstant = value;
             }
         }
 
@@ -592,116 +591,113 @@ namespace TrimbleMonitor.Thunderbolt
         {
             get
             {
-                return unit_initial_voltage;
+                return _initialVoltage;
             }
             set
             {
-                unit_initial_voltage = value;
+                _initialVoltage = value;
             }
         }
 
-        public Single Max_Freq_Offset
+        public Single MaximumFrequencyOffset
         {
             get
             {
-                return unit_max_freq_offset;
+                return _maximumFrequencyOffset;
             }
             set
             {
-                unit_max_freq_offset = value;
+                _maximumFrequencyOffset = value;
             }
         }
 
-        public Single Jam_Sync
+        public Single JamSync
         {
             get
             {
-                return unit_jam_sync;
+                return _jamSync;
             }
             set
             {
-                unit_jam_sync = value;
+                _jamSync = value;
             }
         }
 
-        public Single Max_Volts
+        public Single MaxVolts
         {
             get
             {
-                return unit_max_volts;
+                return _maxVolts;
             }
             set
             {
-                unit_max_volts = value;
+                _maxVolts = value;
             }
         }
 
-        public Single Min_Volts
+        public Single MinVolts
         {
             get
             {
-                return unit_min_volts;
+                return _minVolts;
             }
             set
             {
-                unit_min_volts = value;
+                _minVolts = value;
             }
         }
 
-        public Single Osc_Gain
+        public Single OscGain
         {
             get
             {
-                return unit_osc_gain;
+                return _oscGain;
             }
             set
             {
-                unit_osc_gain = value;
+                _oscGain = value;
             }
         }
 
-        public Single Damping_Factor
+        public Single DampingFactor
         {
             get
             {
-                return unit_damping_factor;
+                return _dampingFactor;
             }
             set
             {
-                unit_damping_factor = value;
+                _dampingFactor = value;
             }
         }
 
         public TimeType TimeValue
         {
-            get { return time_value; }
-            //set { time_value = value; }
+            get { return _timeValue; }
         }
 
-        public UInt32 TOW
+        public UInt32 TimeOfWeek
         {
-            get { return tow; }
+            get { return _timeOfWeek; }
         }
 
-        public UInt16 GPSWeek
+        public UInt16 GpsWeek
         {
-            get { return gps_week; }
-            //set { gps_week = value; }
+            get { return _gpsWeek; }
         }
 
-        public Int16 UTC_Offset
+        public Int16 UtcOffset
         {
-            get { return utc_offset; }
-            //set { utc_offset = value; }
+            get { return _utcOffset; }
         }
 
-        public bool PPS
+        public bool Pps
         {
-            get { return unit_pps; }
+            get { return _pps; }
 
             set
             {
-                unit_pps = value;
+                _pps = value;
             }
         }
 
@@ -709,43 +705,38 @@ namespace TrimbleMonitor.Thunderbolt
         {
             get
             {
-                return unit_cable_delay;
+                return _cableDelay;
             }
         }
 
         public bool OscPolarity
         {
-            get { return unit_osc_polarity; }
-            // set {unit_osc_polarity = value;}
+            get { return _oscPolarity; }
         }
 
-        public byte PPS_Mode
+        public byte PpsMode
         {
-            get { return unit_pps_mode; }
-            // set { unit_pps_mode = value; }
+            get { return _ppsMode; }
         }
 
         public Position CurrentPosition
         {
-            get { return position; }
+            get { return _currentPosition; }
         }
 
         internal VersionInfo FirmwareVersion
         {
-            get { return unit_firmware; }
-            //set { unit_firmware = value; }
+            get { return _firmwareVersion; }
         }
 
         internal VersionInfo HardwareVersion
         {
-            get { return unit_hardware; }
-            // set { unit_hardware = value; }
+            get { return _hardwareVersion; }
         }
 
         internal VersionInfo BuildVersion
         {
-            get { return unit_build; }
-            //set { unit_build = value; }
+            get { return _buildVersion; }
         }
 
         #endregion
@@ -813,8 +804,8 @@ namespace TrimbleMonitor.Thunderbolt
             Single osc_offset = tp.GetNextSingle();
             UInt16 test_code = tp.GetNextWord();
 
-            unit_build.Date = new DateTime(build_year + 2000, build_month, build_day, build_hour, 0, 0);
-            unit_build.SerialNumber = sn_prefix.ToString() + "-" + serial_num.ToString();
+            _buildVersion.Date = new DateTime(build_year + 2000, build_month, build_day, build_hour, 0, 0);
+            _buildVersion.SerialNumber = sn_prefix.ToString() + "-" + serial_num.ToString();
         }
 
         private void prodn_params(TsipPacket tp)
@@ -841,8 +832,8 @@ namespace TrimbleMonitor.Thunderbolt
             Double cable_delay = tp.GetNextDouble();
             Single bias_threshold = tp.GetNextSingle();
 
-            unit_pps = (pps_enabled != 0);
-            unit_cable_delay = (cable_delay / 1.0E-9);
+            _pps = (pps_enabled != 0);
+            _cableDelay = (cable_delay / 1.0E-9);
         }
 
         private void dac_values(TsipPacket tp)
@@ -860,13 +851,13 @@ namespace TrimbleMonitor.Thunderbolt
         private void osc_sense(TsipPacket tp) // not avilable on ThunderBolt-E or early ThunderBolts
         {
             Debug.Print("Packet 8F.A1 (10 MHz sense):");
-            unit_osc_polarity = (tp.GetNextByte() != 0);
+            _oscPolarity = (tp.GetNextByte() != 0);
         }
 
         private void pps_timing_mode(TsipPacket tp)
         {
             Debug.Print("Packet 8F.A2 (Timing mode):");
-            unit_pps_mode = tp.GetNextByte();
+            _ppsMode = tp.GetNextByte();
         }
 
         private void packet_mask(TsipPacket tp)
@@ -952,23 +943,23 @@ namespace TrimbleMonitor.Thunderbolt
 
             if (type == 0)
             {
-                unit_time_constant = tp.GetNextSingle();
-                unit_damping_factor = tp.GetNextSingle();
+                _timeConstant = tp.GetNextSingle();
+                _dampingFactor = tp.GetNextSingle();
             }
             else if (type == 1)
             {
-                unit_osc_gain = tp.GetNextSingle();
-                unit_min_volts = tp.GetNextSingle();
-                unit_max_volts = tp.GetNextSingle();
+                _oscGain = tp.GetNextSingle();
+                _minVolts = tp.GetNextSingle();
+                _maxVolts = tp.GetNextSingle();
             }
             else if (type == 2)
             {
-                unit_jam_sync = tp.GetNextSingle();
-                unit_max_freq_offset = tp.GetNextSingle();
+                _jamSync = tp.GetNextSingle();
+                _maximumFrequencyOffset = tp.GetNextSingle();
             }
             else if (type == 3)
             {
-                unit_initial_voltage = tp.GetNextSingle();
+                _initialVoltage = tp.GetNextSingle();
             }
         }
 
@@ -1014,34 +1005,34 @@ namespace TrimbleMonitor.Thunderbolt
                 
                 // if this fires an execption, just skip the bad packet
                 //current_time = new DateTime(pri_year, pri_month, pri_day, pri_hours, pri_minutes, pri_seconds);  // This is no longer reliable.
-                current_time = new DateTime(1980, 1, 6).AddDays(pri_gps_week * 7).AddSeconds(pri_tow - pri_utc_offset); // We have to calculate the time ourselves.
+                _currentTime = new DateTime(1980, 1, 6).AddDays(pri_gps_week * 7).AddSeconds(pri_tow - pri_utc_offset); // We have to calculate the time ourselves.
 
-                tow = pri_tow;
-                utc_offset = pri_utc_offset;
-                gps_week = pri_gps_week;
+                _timeOfWeek = pri_tow;
+                _utcOffset = pri_utc_offset;
+                _gpsWeek = pri_gps_week;
 
                 if ((time_flags & 0x04) == 0x04)
-                    time_value = TimeType.NoTimeAvailable;
+                    _timeValue = TimeType.NoTimeAvailable;
                 else if ((time_flags & 0x08) == 0x08)
-                    time_value = TimeType.NoUTCOffset;
+                    _timeValue = TimeType.NoUTCOffset;
                 else if ((time_flags & 0x10) == 0x10)
-                    time_value = TimeType.UserSetTime;
+                    _timeValue = TimeType.UserSetTime;
                 else if ((time_flags & 0x01) == 0x01)
-                    time_value = TimeType.UTCTimeOk;
+                    _timeValue = TimeType.UTCTimeOk;
                 else
-                    time_value = TimeType.GPSTimeOk;
+                    _timeValue = TimeType.GPSTimeOk;
 
                 // Set the time on the netduino to the current time on the Thunderbolt.
-                Microsoft.SPOT.Hardware.Utility.SetLocalTime(current_time);
+                Microsoft.SPOT.Hardware.Utility.SetLocalTime(_currentTime);
 
-                if ((last_current_time != current_time) && (TimeChanged != null))
+                if ((last_current_time != _currentTime) && (TimeChanged != null))
                     TimeChanged(this, new EventArgs());
 
-                last_current_time = current_time;
+                last_current_time = _currentTime;
             }
             catch (Exception e)
             {
-                current_time = last_current_time;
+                _currentTime = last_current_time;
                 Debug.Print("Exception:" + e.Message);
             }
         }
@@ -1053,58 +1044,58 @@ namespace TrimbleMonitor.Thunderbolt
             byte spare;
             try
             {
-                receiver_mode = (ReceiverMode)tp.GetNextByte();
+                _receiverMode = (ReceiverMode)tp.GetNextByte();
             }
             catch
             {
-                receiver_mode = ReceiverMode.Unknown;
+                _receiverMode = ReceiverMode.Unknown;
             }
             try
             {
-                discipline_mode = (DiscipliningMode)tp.GetNextByte();
+                _disciplineMode = (DiscipliningMode)tp.GetNextByte();
             }
             catch
             {
-                discipline_mode = DiscipliningMode.Unknown;
+                _disciplineMode = DiscipliningMode.Unknown;
             }
-            survey_progress = tp.GetNextByte(); // 0-100%
+            _surveyProgress = tp.GetNextByte(); // 0-100%
 
-            holdover = tp.GetNextDWord(); // seconds
+            _holdoverDuration = tp.GetNextDWord(); // seconds
 
-            critical_alarms = tp.GetNextWord();
-            minor_alarms = tp.GetNextWord();
+            _criticalAlarms = tp.GetNextWord();
+            _minorAlarms = tp.GetNextWord();
             try
             {
-                gps_status = (ReceiverStatus)tp.GetNextByte();
+                _gpsReceiverStatus = (ReceiverStatus)tp.GetNextByte();
             }
             catch
             {
-                gps_status = ReceiverStatus.Unknown;
+                _gpsReceiverStatus = ReceiverStatus.Unknown;
             }
 
             try
             {
-                discipline = (DiscipliningActivity)tp.GetNextByte();
+                _disciplineActivity = (DiscipliningActivity)tp.GetNextByte();
             }
             catch
             {
-                discipline = DiscipliningActivity.Unknown;
+                _disciplineActivity = DiscipliningActivity.Unknown;
             }
 
             spare = tp.GetNextByte();
             spare = tp.GetNextByte();
 
-            pps_offset = tp.GetNextSingle();  // in nano seconds (ns)
+            _ppsOffset = tp.GetNextSingle();  // in nano seconds (ns)
 
-            osc_offset = tp.GetNextSingle();  // in parts per billion (ppb)
+            _oscOffset = tp.GetNextSingle();  // in parts per billion (ppb)
 
-            dac_value = tp.GetNextDWord();
-            dac_voltage = tp.GetNextSingle(); // in V
-            temperature = tp.GetNextSingle(); // in C
+            _dacValue = tp.GetNextDWord();
+            _dacVoltage = tp.GetNextSingle(); // in V
+            _temperature = tp.GetNextSingle(); // in C
 
-            position.Latitude = tp.GetNextDouble();
-            position.Longitude = tp.GetNextDouble();
-            position.Altitude = tp.GetNextDouble();
+            _currentPosition.Latitude = tp.GetNextDouble();
+            _currentPosition.Longitude = tp.GetNextDouble();
+            _currentPosition.Altitude = tp.GetNextDouble();
 
             if (SecondaryTimingChanged != null)
                 SecondaryTimingChanged(this, null);
@@ -1186,7 +1177,7 @@ namespace TrimbleMonitor.Thunderbolt
             byte vel = tp.GetNextByte();
             byte timing = tp.GetNextByte();
             byte aux = tp.GetNextByte();
-            level_type = ((aux & 0x08) == 0x08) ? "dB" : "AMU";
+            _levelType = ((aux & 0x08) == 0x08) ? "dB" : "AMU";
         }
 
         private void enu_velocity_fix(TsipPacket tp)
@@ -1361,11 +1352,11 @@ namespace TrimbleMonitor.Thunderbolt
 
         private void raise_position_change()
         {
-            if (last_position != null || position.Equals(last_position) == false)
+            if (last_position != null || _currentPosition.Equals(last_position) == false)
                 if (PositionChanged != null)
                     PositionChanged(this, new EventArgs()); // raise Position Changed event
 
-            last_position = position;
+            last_position = _currentPosition;
 
         }
 
@@ -1373,9 +1364,9 @@ namespace TrimbleMonitor.Thunderbolt
         {
             Debug.Print("Packet 84 (LLA fix):");
 
-            position.Latitude = tp.GetNextDouble();
-            position.Longitude = tp.GetNextDouble();
-            position.Altitude = tp.GetNextDouble();
+            _currentPosition.Latitude = tp.GetNextDouble();
+            _currentPosition.Longitude = tp.GetNextDouble();
+            _currentPosition.Altitude = tp.GetNextDouble();
 
             Double clock_bias = tp.GetNextDouble();
             Single time_of_fix = tp.GetNextSingle();
@@ -1538,19 +1529,19 @@ namespace TrimbleMonitor.Thunderbolt
                 rev_month = tp.GetNextByte();  // build month
                 rev_day = tp.GetNextByte();    // build day
                 rev_year = tp.GetNextWord();   // build year
-                unit_firmware.VersionString = tp.GetNextString(); // product name string
+                _firmwareVersion.VersionString = tp.GetNextString(); // product name string
                 try
                 {
-                    unit_firmware.Date = new DateTime(rev_year, rev_month, rev_day, 0, 0, 0);
+                    _firmwareVersion.Date = new DateTime(rev_year, rev_month, rev_day, 0, 0, 0);
                 }
                 catch (Exception e)
                 {
-                    unit_firmware.Date = new DateTime(0L);   // bad date
+                    _firmwareVersion.Date = new DateTime(0L);   // bad date
                     Debug.Print("Date Conversion Exception: " + e.Message);
                 }
-                unit_firmware.Code = 0;
+                _firmwareVersion.Code = 0;
                 if (FirmwareVersionInfoReceived != null)
-                    FirmwareVersionInfoReceived(this, new VersionInfoEventArgs(unit_firmware));
+                    FirmwareVersionInfoReceived(this, new VersionInfoEventArgs(_firmwareVersion));
             }
             else if (subcode == 0x83) // hardware version
             {
@@ -1561,21 +1552,21 @@ namespace TrimbleMonitor.Thunderbolt
                 rev_year = tp.GetNextWord();         // board build year
                 byte rev_hour = tp.GetNextByte();    // board build hour
 
-                unit_hardware.Code = tp.GetNextWord(); // hardware code associated with hardware ID
-                unit_hardware.VersionString = tp.GetNextString(); // Hardware ID
-                unit_hardware.SerialNumber = "SN:" + serno.ToString();
+                _hardwareVersion.Code = tp.GetNextWord(); // hardware code associated with hardware ID
+                _hardwareVersion.VersionString = tp.GetNextString(); // Hardware ID
+                _hardwareVersion.SerialNumber = "SN:" + serno.ToString();
 
                 try
                 {
-                    unit_hardware.Date = new DateTime(rev_year, rev_month, rev_day, rev_hour, 0, 0);
+                    _hardwareVersion.Date = new DateTime(rev_year, rev_month, rev_day, rev_hour, 0, 0);
                 }
                 catch (Exception e)
                 {
-                    unit_hardware.Date = new DateTime(0L);  // bad date
+                    _hardwareVersion.Date = new DateTime(0L);  // bad date
                     Debug.Print("Date Conversion Exception: " + e.Message);
                 }
                 if (HardwareVersionInfoReceived != null)
-                    HardwareVersionInfoReceived(this, new VersionInfoEventArgs(unit_hardware));
+                    HardwareVersionInfoReceived(this, new VersionInfoEventArgs(_hardwareVersion));
             }
             else
                 unknown_msg(tp);
@@ -1710,19 +1701,19 @@ namespace TrimbleMonitor.Thunderbolt
 
             try
             {
-                unit_firmware.Major = ap_month;
-                unit_firmware.Minor = ap_minor;
-                unit_firmware.Date = new DateTime(ap_year, ap_month, ap_day);
+                _firmwareVersion.Major = ap_month;
+                _firmwareVersion.Minor = ap_minor;
+                _firmwareVersion.Date = new DateTime(ap_year, ap_month, ap_day);
 
-                unit_hardware.Major = core_major;
-                unit_hardware.Minor = core_minor;
-                unit_hardware.Date = new DateTime(core_year, core_month, core_day);
+                _hardwareVersion.Major = core_major;
+                _hardwareVersion.Minor = core_minor;
+                _hardwareVersion.Date = new DateTime(core_year, core_month, core_day);
 
                 if (SoftwareVersionInfoReceived != null)
-                    SoftwareVersionInfoReceived(this, new VersionInfoEventArgs(unit_firmware));
+                    SoftwareVersionInfoReceived(this, new VersionInfoEventArgs(_firmwareVersion));
 
                 if (HardwareVersionInfoReceived != null)
-                    HardwareVersionInfoReceived(this, new VersionInfoEventArgs(unit_hardware));
+                    HardwareVersionInfoReceived(this, new VersionInfoEventArgs(_hardwareVersion));
             }
             catch (Exception e)
             {
@@ -1784,8 +1775,8 @@ namespace TrimbleMonitor.Thunderbolt
             Single s_time = tp.GetNextSingle();
             Int16 s_week = (short)tp.GetNextWord();
             Single s_offset = tp.GetNextSingle();
-            if (GPSTimeReceived != null)
-                GPSTimeReceived(this, new GPSTimeInfoEventArgs(s_time, s_week, s_offset));
+            if (GpsTimeReceived != null)
+                GpsTimeReceived(this, new GPSTimeInfoEventArgs(s_time, s_week, s_offset));
         }
 
         #endregion
@@ -2120,7 +2111,7 @@ namespace TrimbleMonitor.Thunderbolt
             send_byte(new byte[] 
             {
                 0, // Primary receiver configuration data
-                (byte)receiver_mode, // Receiver Mode
+                (byte)_receiverMode, // Receiver Mode
                 0,                  // Value is ignored
                 4,                  // Dynamics Code (Stationary)
                 0,                  // Value is ignored
@@ -2366,29 +2357,29 @@ namespace TrimbleMonitor.Thunderbolt
             send_msg_start(0x8E);
             send_byte(0xA8);
             send_byte(0x00);
-            send_single(unit_time_constant);
-            send_single(unit_damping_factor);
+            send_single(_timeConstant);
+            send_single(_dampingFactor);
             send_msg_end();
 
             send_msg_start(0x8E);
             send_byte(0xA8);
             send_byte(0x01);
-            send_single(unit_osc_gain);
-            send_single(unit_min_volts);
-            send_single(unit_max_volts);
+            send_single(_oscGain);
+            send_single(_minVolts);
+            send_single(_maxVolts);
             send_msg_end();
 
             send_msg_start(0x8E);
             send_byte(0xA8);
             send_byte(0x02);
-            send_single(unit_jam_sync);
-            send_single(unit_max_freq_offset);
+            send_single(_jamSync);
+            send_single(_maximumFrequencyOffset);
             send_msg_end();
 
             send_msg_start(0x8E);
             send_byte(0xA8);
             send_byte(0x03);
-            send_single(unit_initial_voltage);
+            send_single(_initialVoltage);
             send_msg_end();
         }
 

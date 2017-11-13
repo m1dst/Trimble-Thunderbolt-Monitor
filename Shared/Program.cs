@@ -234,9 +234,9 @@ namespace TrimbleMonitor
         {
             string mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
             _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
-            _lcdshield.WriteLine(1, "  GPS: " + EnumerationStrings.ReceiverStatusString(_thunderbolt.ReceiverStatus));
+            _lcdshield.WriteLine(1, "  GPS: " + EnumerationStrings.ReceiverStatusString(_thunderbolt.GpsReceiverReceiverStatus));
             _lcdshield.WriteLine(2, "DActv: " + EnumerationStrings.DiscipliningActivityString(_thunderbolt.DisciplineActivity));
-            _lcdshield.WriteLine(3, "10MHz: " + StringExtension.PadLeft(_thunderbolt.Osc_Offset.ToString("N3") + "ppb ", 10) + GetAlarmIndicatorString());
+            _lcdshield.WriteLine(3, "10MHz: " + StringExtension.PadLeft(_thunderbolt.OscOffset.ToString("N3") + "ppb ", 10) + GetAlarmIndicatorString());
         }
 
         static void DisplayScreenTwo()
@@ -368,7 +368,7 @@ namespace TrimbleMonitor
                 }
             }
 
-            _lcdshield.WriteLine(2, "DAC: " + _thunderbolt.DAC_Voltage.ToString("N6") + "V");
+            _lcdshield.WriteLine(2, "DAC: " + _thunderbolt.DacVoltage.ToString("N6") + "V");
 
             _lcdshield.SetCursorPosition(0, 3);
             _lcdshield.Write("Temp: " + _thunderbolt.Temperature.ToString("N2"));

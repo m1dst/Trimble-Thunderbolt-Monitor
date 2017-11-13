@@ -7,7 +7,7 @@ namespace TrimbleMonitor.Thunderbolt
 
     internal delegate void ThunderBoltEventHandler(object sender, EventArgs e);
     internal delegate void VersionInfoEventHandler(object sender, VersionInfoEventArgs e);
-    internal delegate void GPSTimeReceivedEventHandler(object sender, GPSTimeInfoEventArgs e);
+    internal delegate void GpsTimeReceivedEventHandler(object sender, GPSTimeInfoEventArgs e);
 
     #endregion
 
