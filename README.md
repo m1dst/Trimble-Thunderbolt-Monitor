@@ -1,4 +1,6 @@
-**ATTENTION: If you are already running this project you must update to v1.0.4 which corrects the problem where the date rolls back to 1997.  The Trimble Thunderbolt will have stopped reporting the correct time from July 30th 2017 for any hardware/software which reads its data unless it is aware of the rollover.**
+**ATTENTION: If you are already running this project you must update to at least v1.0.4 which corrects the problem where the date rolls back to 1997.  The Trimble Thunderbolt will have stopped reporting the correct time from July 30th 2017 for any hardware/software which reads its data unless it is aware of the rollover.**
+
+**If you don't know how to use GitHub and just want to download the latest development code, visit [https://github.com/m1dst/Trimble-Thunderbolt-Monitor/archive/master.zip](https://github.com/m1dst/Trimble-Thunderbolt-Monitor/archive/master.zip).  You can always redownload the latest version with this link.  If you want an official releases, click the [releases link](https://github.com/m1dst/Trimble-Thunderbolt-Monitor/releases).**
 
 Thunderbolt Monitor is a stand-alone microprocessor-controlled LCD specifically for the [Trimble Thunderbolt](http://www.trimble.com/timing/thunderbolt-e.aspx) disciplined clock, providing a comprehensive indication of the Thunderbolt's status, modes, and alarm conditions written in C# (NETMF).
 
