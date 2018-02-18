@@ -95,18 +95,18 @@
     <Compile Include="..\Shared\Thunderbolt\VersionInfo.cs">
       <Link>Thunderbolt\VersionInfo.cs</Link>
     </Compile>
-	<Compile Include="..\Shared\AssemblyInfo.cs">
+    <Compile Include="..\Shared\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.SPOT.Hardware" />
+    <Reference Include="Microsoft.SPOT.Hardware.PWM" />
     <Reference Include="Microsoft.SPOT.Hardware.SerialPort" />
     <Reference Include="Microsoft.SPOT.Native" />
     <Reference Include="Microsoft.SPOT.Net" />
     <Reference Include="SecretLabs.NETMF.Hardware" />
     <Reference Include="SecretLabs.NETMF.Hardware.Netduino" />
-    <Reference Include="SecretLabs.NETMF.Hardware.PWM, Version=4.2.2.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
   </ItemGroup>
 </Project>

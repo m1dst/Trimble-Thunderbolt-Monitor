@@ -14,6 +14,8 @@ namespace TrimbleMonitor
 {
     public class Program
     {
+        // Percentage you would like the LCD set to.  Between 0 and 100.
+        const byte LcdBrighness = 100;
 
         static DfRobotLcdShield _lcdshield;
         static ThunderBolt _thunderbolt;
@@ -61,6 +63,10 @@ namespace TrimbleMonitor
             _lcdshield.OnButtonPressed += LcdshieldOnOnButtonPressed;
 
             DisplaySplash();
+#if(NETDUINO)
+            var backlight = new Microsoft.SPOT.Hardware.PWM(PWMChannels.PWM_PIN_D10, 10000, LcdBrighness / 100d, false);
+            backlight.Start();
+#endif
             TestLeds();
 
             _thunderbolt.Open();
