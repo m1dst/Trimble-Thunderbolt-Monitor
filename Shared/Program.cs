@@ -225,7 +225,7 @@ namespace TrimbleMonitor
             _lcdshield.WriteLine(0, "Trimble Thunderbolt", TextAlign.Centre);
             _lcdshield.WriteLine(1, "Monitor (M1DST)", TextAlign.Centre);
             _lcdshield.WriteLine(2, "www.m1dst.co.uk", TextAlign.Centre);
-            _lcdshield.WriteLine(3, "Version 1.0.6", TextAlign.Centre);
+            _lcdshield.WriteLine(3, "Version 1.0.7", TextAlign.Centre);
         }
 
         static void DisplayNoSerialDataScreen()
