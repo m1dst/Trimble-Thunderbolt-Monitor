@@ -130,7 +130,7 @@ namespace TrimbleMonitor.Thunderbolt
 
         /// <summary>
         /// Internal code assigned to the hardware slot used to track the specified satellite. 
-        /// Slot encoding is generally not used in modern receviers. 
+        /// Slot encoding is generally not used in modern receivers. 
         /// </summary>
         public byte Slot { get; set; }
 
