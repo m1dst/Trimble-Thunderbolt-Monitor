@@ -16,7 +16,7 @@ namespace TrimbleMonitor
     public class Program
     {
         // Percentage you would like the LCD set to.  Between 0 and 100.
-        const byte LcdBrighness = 100;
+        const byte LcdBrightness = 100;
 
         static DfRobotLcdShield _lcdshield;
         static ThunderBolt _thunderbolt;
@@ -32,6 +32,7 @@ namespace TrimbleMonitor
         static int _numberOfPages = 7;
 #endif
 
+        private static int[] _prns = new int[12]; 
         static bool _isSurveyInProgress = false;
 
 #if(NETDUINO)
@@ -76,7 +77,7 @@ namespace TrimbleMonitor
             DisplaySplash();
 
 #if(NETDUINO)
-            var backlight = new Microsoft.SPOT.Hardware.PWM(PWMChannels.PWM_PIN_D10, 10000, LcdBrighness / 100d, false);
+            var backlight = new Microsoft.SPOT.Hardware.PWM(PWMChannels.PWM_PIN_D10, 10000, LcdBrightness / 100d, false);
             backlight.Start();
 #endif
 
@@ -491,7 +492,6 @@ namespace TrimbleMonitor
 
         static void DisplayPRNScreen()
         {
-            var prns = new int[12];
 
             var mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
             _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
@@ -501,35 +501,35 @@ namespace TrimbleMonitor
                 var satellite = _thunderbolt.Satellites[i];
                 if (satellite.Channel > 0)
                 {
-                    prns[satellite.Channel - 1] = i;
+                    _prns[satellite.Channel] = i;
                 }
             }
 
             _lcdshield.SetCursorPosition(0, 1);
-            for (var i = 0; i < (prns.Length / 2); i++)
+            for (var i = 0; i < _prns.Length / 2; i++)
             {
 
-                if ((_thunderbolt.MinorAlarms & 0x800) == 0x800 && prns[i] == 0)
+                if ((_thunderbolt.MinorAlarms & 0x800) == 0x800 && _prns[i] == 0)
                 {
                     _lcdshield.Write("?? ");
                 }
                 else
                 {
-                    _lcdshield.Write(prns[i].ToString().PadLeft(2, '0') + " ");
+                    _lcdshield.Write(_prns[i].ToString().PadLeft(2, '0') + " ");
                 }
             }
             _lcdshield.Write("".PadLeft(2));
 
             _lcdshield.SetCursorPosition(0, 2);
-            for (var i = prns.Length / 2; i < prns.Length; i++)
+            for (var i = _prns.Length / 2; i < _prns.Length; i++)
             {
-                if ((_thunderbolt.MinorAlarms & 0x800) == 0x800 && prns[i] == 0)
+                if ((_thunderbolt.MinorAlarms & 0x800) == 0x800 && _prns[i] == 0)
                 {
                     _lcdshield.Write("?? ");
                 }
                 else
                 {
-                    _lcdshield.Write(prns[i].ToString().PadLeft(2, '0') + " ");
+                    _lcdshield.Write(_prns[i].ToString().PadLeft(2, '0') + " ");
                 }
             }
             _lcdshield.Write("".PadLeft(2));
