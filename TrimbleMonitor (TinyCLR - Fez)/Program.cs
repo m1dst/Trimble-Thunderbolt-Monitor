@@ -374,7 +374,7 @@ namespace TrimbleMonitor.TinyCLR.Fez
             _lcdShield.SetCursorPosition(0, 3);
             _lcdShield.Write("Temp: " + _thunderbolt.Temperature.ToString("N2"));
             _lcdShield.WriteByte(0);
-            _lcdShield.Write("C".PadRight(6) + GetAlarmIndicatorString());
+            _lcdShield.Write("C".PadRight(5) + GetAlarmIndicatorString());
         }
 
         static void DisplaySatelliteSignalScreen()
