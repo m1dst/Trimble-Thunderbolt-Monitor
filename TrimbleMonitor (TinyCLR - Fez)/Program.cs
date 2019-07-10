@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using GHIElectronics.TinyCLR.Devices.Gpio;
 using GHIElectronics.TinyCLR.Devices.Pwm;
@@ -25,7 +26,7 @@ namespace TrimbleMonitor.TinyCLR.Fez
 
         private static readonly GpioPin MinorLed = GpioController.GetDefault().OpenPin(FEZ.GpioPin.D12);
         private static readonly GpioPin MajorLed = GpioController.GetDefault().OpenPin(FEZ.GpioPin.D11);
-        
+
         public static void Main()
         {
 
@@ -379,7 +380,7 @@ namespace TrimbleMonitor.TinyCLR.Fez
         static void DisplaySatelliteSignalScreen()
         {
 
-            var satStatus = "            ".ToCharArray();
+            var satStatus = "------------".ToCharArray();
             var satSignal = new int[12];
 
             var numberOfSatsUsedInFix = 0;
@@ -387,49 +388,40 @@ namespace TrimbleMonitor.TinyCLR.Fez
 
             foreach (var satellite in _thunderbolt.Satellites)
             {
+
                 // Only display information for satellites which have a channel number assigned.
-                if (satellite.Channel > 0)
+                if (satellite.Tracked && satellite.CollectingData > 0)
                 {
+
+                    numberOfSatsTracked++;
+
                     if (satellite.Disabled)
                     {
-                        satStatus[satellite.Channel - 1] = 'D'; // disabled
+                        satStatus[satellite.Channel] = 'D'; // disabled
                     }
                     else if (satellite.UsedInFix)
                     {
-                        satStatus[satellite.Channel - 1] = 'F'; // being used for fixes.
+                        satStatus[satellite.Channel] = 'F'; // being used for fixes.
                         numberOfSatsUsedInFix++;
-                        numberOfSatsTracked++;
-                    }
-                    else if (satellite.Tracked)
-                    {
-                        satStatus[satellite.Channel - 1] = 'T'; // tracked
-                        numberOfSatsTracked++;
                     }
                     else if (satellite.AcquisitionFlag == 1) // acquired
                     {
-                        satStatus[satellite.Channel - 1] = 'A';
+                        satStatus[satellite.Channel] = 'A';
                     }
                     else if (satellite.AcquisitionFlag == 2) // re-opened search
                     {
-                        satStatus[satellite.Channel - 1] = '*';
+                        satStatus[satellite.Channel] = '*';
                     }
                     else
                     {
-                        satStatus[satellite.Channel - 1] = '-';
-                        //Debug.Print("Sat Ch: " + satellite.Channel + "\n" + satellite.ToString());
+                        satStatus[satellite.Channel] = 'T';
                     }
 
                     // Map the signal level to a number between 0 and 8.
                     if (satellite.SignalLevel >= 0)
                     {
-                        satSignal[satellite.Channel - 1] = (int)Math.Round(satellite.SignalLevel.Map(0, 50, 0, 8));
+                        satSignal[satellite.Channel] = (int)Math.Round(satellite.SignalLevel.Map(0, 50, 0, 8));
                     }
-                    else
-                    {
-                        satSignal[satellite.Channel - 1] = (int)Math.Round(satellite.SignalLevel.Map(-50, 0, -8, 0));
-                    }
-
-                    //Debug.Print(satellite.SignalLevel + "  -  " + satSignal[satellite.Channel - 1]);
 
                 }
             }
@@ -443,7 +435,7 @@ namespace TrimbleMonitor.TinyCLR.Fez
 
             foreach (var signal in satSignal)
             {
-                //Debug.Print(signal.ToString());
+                //Debug.WriteLine(signal.ToString());
                 if (signal <= 0)
                 {
                     _lcdShield.Write(" ");
@@ -474,6 +466,11 @@ namespace TrimbleMonitor.TinyCLR.Fez
                 {
                     _prns[satellite.Channel] = i + 1;
                 }
+            }
+
+            for (var i = 0; i < _prns.Length; i++)
+            {
+                Debug.WriteLine(_prns[i].ToString());
             }
 
             _lcdShield.SetCursorPosition(0, 1);

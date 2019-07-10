@@ -75,7 +75,7 @@ namespace MicroLiquidCrystal
             get
             {
                 var adcRaw = analog.ReadValue();
-                //Debug.Print(adcRaw.ToString());
+                //Debug.WriteLine(adcRaw.ToString());
                 if (adcRaw > KEY_NONE) return Buttons.None;
                 if (adcRaw < KEY_CMD2) return Buttons.Command2;
                 if (adcRaw < KEY_UP) return Buttons.Up;

@@ -170,7 +170,7 @@ namespace TrimbleMonitor.Thunderbolt
                         {
                             case 0:
                             case (byte)TsipControlBytes.ETX:    // illegal TSIP id
-                                //Debug.Print("Parse Error: Illegal TSIP id = {0:X}", newbyte);
+                                //Debug.WriteLine("Parse Error: Illegal TSIP id = {0:X}", newbyte);
                                 _length = 0;
                                 _status = TsipParserStatus.Empty;
                                 break;
@@ -230,7 +230,7 @@ namespace TrimbleMonitor.Thunderbolt
                                 _status = TsipParserStatus.DLE1;
                                 break;
                             default: // error: ignore the new byte
-                                //Debug.Print("Parse Error: {1} Ignore new byte {0:X}", newbyte, this.status.ToString());
+                                //Debug.WriteLine("Parse Error: {1} Ignore new byte {0:X}", newbyte, this.status.ToString());
                                 _length = 0;
                                 _status = TsipParserStatus.Empty;
                                 break;
@@ -240,7 +240,7 @@ namespace TrimbleMonitor.Thunderbolt
             }
             if (_length >= MaxRptbuf)
             {
-                //Debug.Print("Parse Error: {1} Buffer Length Exceeded {0}", this.length, this.status.ToString());
+                //Debug.WriteLine("Parse Error: {1} Buffer Length Exceeded {0}", this.length, this.status.ToString());
                 _length = 0;
                 _status = TsipParserStatus.Empty;
             }

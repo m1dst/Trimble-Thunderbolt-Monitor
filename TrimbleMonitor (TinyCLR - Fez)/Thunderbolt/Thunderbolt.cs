@@ -881,7 +881,6 @@ namespace TrimbleMonitor.Thunderbolt
 
             raise_position_change();
 
-            clear_sat_tracking(); //??
         }
 
         private void timing_msg(TsipPacket tp)
@@ -1707,7 +1706,10 @@ namespace TrimbleMonitor.Thunderbolt
         private void clear_sat_tracking()
         {
             for (var i = 0; i < 32; i++)
+            {
                 Satellites[i].Tracked = false;
+                Satellites[i].SignalLevel = 0;
+            }
         }
 
 
@@ -1715,15 +1717,7 @@ namespace TrimbleMonitor.Thunderbolt
         {
             Debug.WriteLine(":0x47    (Signal Levels for All Tracked Satellites Report)");
 
-            // Reset all of the satellites before they are updated.
-            foreach (var satellite in Satellites)
-            {
-                satellite.Tracked = false;
-                if (!satellite.UsedInFix)
-                {
-                    satellite.SignalLevel = 0;
-                }
-            }
+            clear_sat_tracking();
 
             var count = tp.GetNextByte();
             for (var i = 0; i < count; i++)
