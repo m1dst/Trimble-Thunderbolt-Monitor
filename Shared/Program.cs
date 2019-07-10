@@ -9,6 +9,7 @@ using System.IO.Ports;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Net.NetworkInformation;
 using TrimbleMonitor.Thunderbolt;
+using Math = System.Math;
 
 namespace TrimbleMonitor
 {
@@ -26,9 +27,9 @@ namespace TrimbleMonitor
         static int _pageNumber = 1;
         static int _previousPageNumber = 1;
 #if(NTP)
-        static int _numberOfPages = 5;
+        static int _numberOfPages = 8;
 #else
-        static int _numberOfPages = 4;
+        static int _numberOfPages = 7;
 #endif
 
         static bool _isSurveyInProgress = false;
@@ -47,7 +48,17 @@ namespace TrimbleMonitor
             _lcdshield = new DfRobotLcdShield(20, 4);
 
             // Create a custom degrees symbol (°), store it on the LCD for later use with the lat/long display
-            _lcdshield.CreateChar(7, new byte[] { 0x0, 0x4, 0xa, 0x4, 0x0, 0x0, 0x0, 0x0 });
+            _lcdshield.CreateChar(0, new byte[] { 0x0, 0x4, 0xa, 0x4, 0x0, 0x0, 0x0, 0x0 });
+
+            // 0 bars are not required as that would just require sending " "
+            _lcdshield.CreateChar(1, new byte[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1F });
+            _lcdshield.CreateChar(2, new byte[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1F, 0x1F });
+            _lcdshield.CreateChar(3, new byte[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x1F, 0x1F, 0x1F });
+            _lcdshield.CreateChar(4, new byte[] { 0x0, 0x0, 0x0, 0x0, 0x1F, 0x1F, 0x1F, 0x1F });
+            _lcdshield.CreateChar(5, new byte[] { 0x0, 0x0, 0x0, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F });
+            _lcdshield.CreateChar(6, new byte[] { 0x0, 0x0, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F });
+            _lcdshield.CreateChar(7, new byte[] { 0x0, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F });
+            // 8 bars are not required as that would just require sending byte 255.
 
 #if(NETDUINO)
             _thunderbolt = new ThunderBolt("COM1", AngleUnits.Degrees, AltitudeUnits.Meters, new OutputPort(Pins.GPIO_PIN_D13, false));
@@ -63,16 +74,26 @@ namespace TrimbleMonitor
             _lcdshield.OnButtonPressed += LcdshieldOnOnButtonPressed;
 
             DisplaySplash();
+
 #if(NETDUINO)
             var backlight = new Microsoft.SPOT.Hardware.PWM(PWMChannels.PWM_PIN_D10, 10000, LcdBrighness / 100d, false);
             backlight.Start();
 #endif
+
             TestLeds();
 
             _thunderbolt.Open();
             _thunderbolt.TimingMode = TimingModes.UTC;
+            _thunderbolt.RequestManufacturingParameters();
+            _thunderbolt.RequestFirmwareVersion();
+            _thunderbolt.SetupUnitForDisciplining();
+            _thunderbolt.RequestTrackedSatelliteStatus();
 
-            Thread.Sleep(1500);
+            _thunderbolt.TimeChanged += ThunderboltOnTimeChanged;
+
+            Thread.Sleep(3000);
+
+            DisplayVersion();
 
 #if(NTP)
             _ntpServer.Start();
@@ -99,26 +120,35 @@ namespace TrimbleMonitor
 
                     switch (_pageNumber)
                     {
-                        case 1:
-                            DisplayScreenOne();
-                            break;
-                        case 2:
-                            DisplayScreenTwo();
-                            break;
-                        case 3:
-                            DisplayScreenThree();
-                            break;
-                        case 4:
-                            DisplayScreenFour();
-                            break;
+                    case 1:
+                        DisplayScreenOne();
+                        break;
+                    case 2:
+                        DisplayScreenTwo();
+                        break;
+                    case 3:
+                        DisplayScreenThree();
+                        break;
+                    case 4:
+                        DisplayScreenFour();
+                        break;
+                    case 5:
+                        DisplaySatelliteSignalScreen();
+                        break;
+                    case 6:
+                        DisplayPRNScreen();
+                        break;
+                    case 7:
+                        DisplayDOPScreen();
+                        break;
 #if(NTP)
-                        case 5:
-                            DisplayScreenFive();
-                            break;
+                    case 8:
+                        DisplayScreenNTP();
+                        break;
 #endif
-                        default:
-                            DisplayScreenOne();
-                            break;
+                    default:
+                        DisplayScreenOne();
+                        break;
                     }
 
                     UpdateAlarmIndicators();
@@ -129,8 +159,6 @@ namespace TrimbleMonitor
                     DisplayNoSerialDataScreen();
                 }
 
-                Thread.Sleep(100);
-
             }
 
         }
@@ -139,18 +167,10 @@ namespace TrimbleMonitor
         {
             if (_thunderbolt.IsSerialDataBeingReceived)
             {
-                switch (_pageNumber)
-                {
-                    case 1:
-                    case 2:
-                    case 3:
-#if(NTP)
-                    case 5:
-#endif
-                        string mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
-                        _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
-                    break;
-                }
+                // When we receive a time packet, request the satellite statuses.
+                // This is just a simple way to regulate/throttle the requests.
+                _thunderbolt.RequestSatelliteList();
+                _thunderbolt.RequestSatelliteSignalLevels();
             }
         }
 
@@ -158,25 +178,25 @@ namespace TrimbleMonitor
         {
             MinorLed.Write(true);
             MajorLed.Write(true);
-            Thread.Sleep(500);
+            Thread.Sleep(100);
             MinorLed.Write(false);
             MajorLed.Write(false);
-            Thread.Sleep(500);
+            Thread.Sleep(100);
             MinorLed.Write(true);
             MajorLed.Write(false);
-            Thread.Sleep(500);
+            Thread.Sleep(100);
             MinorLed.Write(false);
             MajorLed.Write(false);
-            Thread.Sleep(500);
+            Thread.Sleep(100);
             MinorLed.Write(false);
             MajorLed.Write(true);
-            Thread.Sleep(500);
+            Thread.Sleep(100);
             MinorLed.Write(false);
             MajorLed.Write(false);
-            Thread.Sleep(500);
+            Thread.Sleep(100);
             MinorLed.Write(true);
             MajorLed.Write(true);
-            Thread.Sleep(500);
+            Thread.Sleep(100);
             MinorLed.Write(false);
             MajorLed.Write(false);
         }
@@ -187,21 +207,14 @@ namespace TrimbleMonitor
             {
                 case DfRobotLcdShield.Buttons.Command1:
                     _thunderbolt.ReceiverMode = ReceiverMode.FullPosition;
-                    // Transmit COM 8 Packet ID: BB  Data Length: 40
-                    // 00 04 FF 04 02 3E 32 B8 C3 40 80 00 00 41 00 00 00 40 C0 00 00 FF 01 FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF 
-
                     break;
 
                 case DfRobotLcdShield.Buttons.Command2:
-
                     _thunderbolt.ReceiverMode = ReceiverMode.OverDeterminedClock;
-                    // Transmit COM 8 Packet ID: BB  Data Length: 40
-                    // 00 07 FF 04 02 3E 32 B8 C3 40 80 00 00 41 00 00 00 40 C0 00 00 FF 01 FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF 
-
                     break;
 
                 case DfRobotLcdShield.Buttons.Command3:
-                    //_thunderbolt.set_survey_params(1, 1, 5);
+                    _thunderbolt.set_survey_params(1, 1, 200);
                     _thunderbolt.start_self_survey();
                     break;
 
@@ -225,7 +238,16 @@ namespace TrimbleMonitor
             _lcdshield.WriteLine(0, "Trimble Thunderbolt", TextAlign.Centre);
             _lcdshield.WriteLine(1, "Monitor (M1DST)", TextAlign.Centre);
             _lcdshield.WriteLine(2, "www.m1dst.co.uk", TextAlign.Centre);
-            _lcdshield.WriteLine(3, "Version 1.0.7", TextAlign.Centre);
+            _lcdshield.WriteLine(3, "Version 1.1.0", TextAlign.Centre);
+        }
+
+        static void DisplayVersion()
+        {
+            _lcdshield.WriteLine(0, "TBolt FW Ver: " + _thunderbolt.FirmwareVersion.Major + "." + _thunderbolt.FirmwareVersion.Minor);
+            _lcdshield.WriteLine(1, "TBolt HW Ver: " + (_thunderbolt.BuildVersion.Major > 0 ? _thunderbolt.BuildVersion.Major + "." + _thunderbolt.BuildVersion.Minor : "N/A"));
+            _lcdshield.WriteLine(2, "Built: " + _thunderbolt.BuildVersion.Date.ToString(@"dd-MMM-yyyy"));
+            _lcdshield.WriteLine(3, "Serial Num: " + _thunderbolt.BuildVersion.SerialNumber);
+            Thread.Sleep(5000);
         }
 
         static void DisplayNoSerialDataScreen()
@@ -238,51 +260,51 @@ namespace TrimbleMonitor
 
         static void DisplayScreenOne()
         {
-            string mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
+            var mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
             _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
             _lcdshield.WriteLine(1, "  GPS: " + EnumerationStrings.ReceiverStatusString(_thunderbolt.GpsReceiverReceiverStatus));
             _lcdshield.WriteLine(2, "DActv: " + EnumerationStrings.DiscipliningActivityString(_thunderbolt.DisciplineActivity));
-            _lcdshield.WriteLine(3, "10MHz: " + StringExtension.PadLeft(_thunderbolt.OscOffset.ToString("N3") + "ppb ", 10) + GetAlarmIndicatorString());
+            _lcdshield.WriteLine(3, "10MHz: " + (_thunderbolt.OscOffset.ToString("N3") + "ppb ").PadLeft(10) + GetAlarmIndicatorString());
         }
 
         static void DisplayScreenTwo()
         {
-            string mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
+            var mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
             _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
             _lcdshield.WriteLine(1, " RX M: " + EnumerationStrings.ReceiverModeString(_thunderbolt.ReceiverMode));
             _lcdshield.WriteLine(2, "DscpM: " + EnumerationStrings.DiscipliningModeString(_thunderbolt.DisciplineMode));
             if (_isSurveyInProgress)
             {
-                _lcdshield.WriteLine(3, "Survey: " + StringExtension.PadRight(StringExtension.PadLeft(_thunderbolt.SurveyProgress + "%", 4), 9) + GetAlarmIndicatorString());
+                _lcdshield.WriteLine(3, "Survey: " + (_thunderbolt.SurveyProgress + "%").PadLeft(4).PadRight(9) + GetAlarmIndicatorString());
             }
             else
             {
                 var uptime = PowerState.Uptime;
-                _lcdshield.WriteLine(3, StringExtension.PadRight("Up:" + StringExtension.PadLeft(uptime.Days.ToString(), 4) + "D:" + StringExtension.PadLeft(uptime.Hours.ToString(), 2, '0') + "H:" + StringExtension.PadLeft(uptime.Minutes.ToString(), 2, '0') + "M", 17) + GetAlarmIndicatorString());
+                _lcdshield.WriteLine(3, ("Up:" + uptime.Days.ToString().PadLeft(4) + "D:" + uptime.Hours.ToString().PadLeft(2, '0') + "H:" + uptime.Minutes.ToString().PadLeft(2, '0') + "M").PadRight(17) + GetAlarmIndicatorString());
             }
 
         }
 
         static void DisplayScreenThree()
         {
-            string mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
+            var mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
             _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
 
             _lcdshield.SetCursorPosition(0, 1);
-            var s = "Lat:" + StringExtension.PadLeft(_thunderbolt.CurrentPosition.Latitude.ToString("N4"), 9);
+            var s = "Lat:" + _thunderbolt.CurrentPosition.Latitude.ToString("N4").PadLeft(9);
             _lcdshield.Write(s);
-            _lcdshield.WriteByte(7);
-            _lcdshield.Write(StringExtension.PadLeft("", 16 - (s.Length + 1)));
+            _lcdshield.WriteByte(0);
+            _lcdshield.Write("".PadLeft(16 - (s.Length + 1)));
             _lcdshield.Write("Alt:");
 
             _lcdshield.SetCursorPosition(0, 2);
-            s = "Lon:" + StringExtension.PadLeft(_thunderbolt.CurrentPosition.Longitude.ToString("N4"), 9);
+            s = "Lon:" + _thunderbolt.CurrentPosition.Longitude.ToString("N4").PadLeft(9);
             _lcdshield.Write(s);
-            _lcdshield.WriteByte(7);
-            _lcdshield.Write(StringExtension.PadLeft("", 14 - (s.Length + 1)));
-            _lcdshield.Write(StringExtension.PadLeft(_thunderbolt.CurrentPosition.Altitude.ToString("N0") + "m", 6));
+            _lcdshield.WriteByte(0);
+            _lcdshield.Write("".PadLeft(14 - (s.Length + 1)));
+            _lcdshield.Write((_thunderbolt.CurrentPosition.Altitude.ToString("N0") + "m").PadLeft(6));
 
-            _lcdshield.WriteLine(3, "Grid: " + StringExtension.PadRight(MaidenheadLocator.LatLongToLocator(_thunderbolt.CurrentPosition.Latitude, _thunderbolt.CurrentPosition.Longitude), 11) + GetAlarmIndicatorString());
+            _lcdshield.WriteLine(3, "Grid: " + MaidenheadLocator.LatLongToLocator(_thunderbolt.CurrentPosition.Latitude, _thunderbolt.CurrentPosition.Longitude).PadRight(11) + GetAlarmIndicatorString());
 
         }
 
@@ -378,12 +400,155 @@ namespace TrimbleMonitor
 
             _lcdshield.SetCursorPosition(0, 3);
             _lcdshield.Write("Temp: " + _thunderbolt.Temperature.ToString("N2"));
-            _lcdshield.WriteByte(7);
+            _lcdshield.WriteByte(0);
             _lcdshield.Write("C    " + GetAlarmIndicatorString());
         }
 
+        static void DisplaySatelliteSignalScreen()
+        {
+
+            var satStatus = "            ".ToCharArray();
+            var satSignal = new int[12];
+
+            var numberOfSatsUsedInFix = 0;
+            var numberOfSatsTracked = 0;
+
+            foreach (var satellite in _thunderbolt.Satellites)
+            {
+                // Only display information for satellites which have a channel number assigned.
+                if (satellite.Channel > 0)
+                {
+                    if (satellite.Disabled)
+                    {
+                        satStatus[satellite.Channel - 1] = 'D'; // disabled
+                    }
+                    else if (satellite.UsedInFix)
+                    {
+                        satStatus[satellite.Channel - 1] = 'F'; // being used for fixes.
+                        numberOfSatsUsedInFix++;
+                        numberOfSatsTracked++;
+                    }
+                    else if (satellite.Tracked)
+                    {
+                        satStatus[satellite.Channel - 1] = 'T'; // tracked
+                        numberOfSatsTracked++;
+                    }
+                    else if (satellite.AcquisitionFlag == 1) // acquired
+                    {
+                        satStatus[satellite.Channel - 1] = 'A';
+                    }
+                    else if (satellite.AcquisitionFlag == 2) // re-opened search
+                    {
+                        satStatus[satellite.Channel - 1] = '*';
+                    }
+                    else
+                    {
+                        satStatus[satellite.Channel - 1] = '-';
+                        //Debug.Print("Sat Ch: " + satellite.Channel + "\n" + satellite.ToString());
+                    }
+
+                    // Map the signal level to a number between 0 and 8.
+                    if (satellite.SignalLevel >= 0)
+                    {
+                        satSignal[satellite.Channel - 1] = (int)Math.Round(satellite.SignalLevel.Map(0, 50, 0, 8));
+                    }
+                    else
+                    {
+                        satSignal[satellite.Channel - 1] = (int)Math.Round(satellite.SignalLevel.Map(-50, 0, -8, 0));
+                    }
+
+                    //Debug.Print(satellite.SignalLevel + "  -  " + satSignal[satellite.Channel - 1]);
+
+                }
+            }
+
+            var mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
+            _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
+            _lcdshield.WriteLine(1, ("Status: " + new string(satStatus)).PadRight(20));
+
+            _lcdshield.SetCursorPosition(0, 2);
+            _lcdshield.Write("Signal: ");
+
+            foreach (var signal in satSignal)
+            {
+                //Debug.Print(signal.ToString());
+                if (signal <= 0)
+                {
+                    _lcdshield.Write(" ");
+                }
+                else if (signal == 8)
+                {
+                    _lcdshield.WriteByte(255);
+                }
+                else
+                {
+                    _lcdshield.WriteByte((byte)signal);
+                }
+            }
+            _lcdshield.WriteLine(3, ("Sats: " + numberOfSatsUsedInFix + "/" + numberOfSatsTracked).PadRight(17, ' ') + GetAlarmIndicatorString());
+
+        }
+
+        static void DisplayPRNScreen()
+        {
+            var prns = new int[12];
+
+            var mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
+            _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));
+
+            for (var i = 0; i < _thunderbolt.Satellites.Length; i++)
+            {
+                var satellite = _thunderbolt.Satellites[i];
+                if (satellite.Channel > 0)
+                {
+                    prns[satellite.Channel - 1] = i;
+                }
+            }
+
+            _lcdshield.SetCursorPosition(0, 1);
+            for (var i = 0; i < (prns.Length / 2); i++)
+            {
+
+                if ((_thunderbolt.MinorAlarms & 0x800) == 0x800 && prns[i] == 0)
+                {
+                    _lcdshield.Write("?? ");
+                }
+                else
+                {
+                    _lcdshield.Write(prns[i].ToString().PadLeft(2, '0') + " ");
+                }
+            }
+            _lcdshield.Write("".PadLeft(2));
+
+            _lcdshield.SetCursorPosition(0, 2);
+            for (var i = prns.Length / 2; i < prns.Length; i++)
+            {
+                if ((_thunderbolt.MinorAlarms & 0x800) == 0x800 && prns[i] == 0)
+                {
+                    _lcdshield.Write("?? ");
+                }
+                else
+                {
+                    _lcdshield.Write(prns[i].ToString().PadLeft(2, '0') + " ");
+                }
+            }
+            _lcdshield.Write("".PadLeft(2));
+
+            _lcdshield.WriteLine(3, "Satellite PRNs".PadRight(17, ' ') + GetAlarmIndicatorString());
+
+        }
+
+        static void DisplayDOPScreen()
+        {
+            _lcdshield.WriteLine(0, ("PDOP:" + _thunderbolt.PDOP.ToString("F3") + " " + Helpers.FloatToFixPrecisionString(_thunderbolt.PDOP)).PadRight(20, ' '));
+            _lcdshield.WriteLine(1, ("TDOP:" + _thunderbolt.TDOP.ToString("F3") + " " + Helpers.FloatToFixPrecisionString(_thunderbolt.TDOP)).PadRight(20, ' '));
+            _lcdshield.WriteLine(2, ("VDOP:" + _thunderbolt.VDOP.ToString("F3") + " " + Helpers.FloatToFixPrecisionString(_thunderbolt.VDOP)).PadRight(20, ' '));
+            _lcdshield.WriteLine(3, ("HDOP:" + _thunderbolt.HDOP.ToString("F3") + " " + Helpers.FloatToFixPrecisionString(_thunderbolt.HDOP)).PadRight(17, ' ') + GetAlarmIndicatorString());
+
+        }
+
 #if(NTP)
-        static void DisplayScreenFive()
+        static void DisplayScreenNTP()
         {
             string mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
             _lcdshield.WriteLine(0, DateTime.UtcNow.ToString(@"dd-MMM-yy \" + mode + " HH:mm:ss"));

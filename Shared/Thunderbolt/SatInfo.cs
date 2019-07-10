@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Microsoft.SPOT;
 
 namespace TrimbleMonitor.Thunderbolt
@@ -7,6 +8,35 @@ namespace TrimbleMonitor.Thunderbolt
     {
         public SatInfo()
         {
+            HasBiasInfo = false;
+            TimeOfFix = 0;
+            SatBias = 0;
+            Tracked = false;
+            UsedInFix = false;
+            CollectingData = 0;
+            BadDataFlag = 0;
+            MsecStatus = 0;
+            Age = 0;
+            Elevation = 0;
+            Azimuth = 0;
+            TimeOfWeek = 0;
+            EphemerisFlag = 0;
+            AcquisitionFlag = 0;
+            Channel = 0;
+            Slot = 0;
+            UserRangeAccuracy = 0;
+            FitIntervalFlag = 0;
+            Toe = 0;
+            IODE = 0;
+            EphemerisHealth = 0;
+            CollectionTime = 0;
+            RawTime = 0;
+            Doppler = 0;
+            CodePhase = 0;
+            SignalLevel = 0;
+            SampleLength = 0;
+            ForcedHealthy = false;
+            Disabled = false;
         }
 
         #region Report Packet 0x49 (Almanac Health Page Report)
@@ -29,20 +59,13 @@ namespace TrimbleMonitor.Thunderbolt
 
         #region Report Packet 0x59 (Satellite Attribute Database Status Report)
 
-        private bool disabled = false;
-        private bool forced_healthy = false;
-
         /// <summary>
         /// Disabled satellites are not used, even when the satellite is in good health. This attribute
         /// identifies any satellites manually disabled by user. The factory default setting is to 
         /// enable all satellites for inclusion in position solution computations if they are in
         /// good health and conform with the mask values for elevation angle, signal level, PDOP, and PDOP Switch
         /// </summary>
-        public bool Disabled
-        {
-            get { return disabled; }
-            set { disabled = value; }
-        }
+        public bool Disabled { get; set; }
 
         /// <summary>
         /// Satellites with this attribute set indicate that the satellite can be used in the position 
@@ -50,143 +73,73 @@ namespace TrimbleMonitor.Thunderbolt
         /// setting is to heed satellite health when choosing the satellites includedin a position 
         /// solution computation.
         /// </summary>
-        public bool ForcedHealthy
-        {
-            get { return forced_healthy; }
-            set { forced_healthy = value; }
-        }
+        public bool ForcedHealthy { get; set; }
+
         #endregion
 
         #region Report Packets 0x47,0x5A,0x5C (General Satellite Info)
 
-        private float sample_len = 0;        // packet 5A
+        public float SampleLength { get; set; }
 
-        public float SampleLength
-        {
-            get { return sample_len; }
-            set { sample_len = value; }
-        }
-        private float sig_level = 0;         // (also packet 47, 5C)
+        public float SignalLevel { get; set; }
 
-        public float SignalLevel
-        {
-            get { return sig_level; }
-            set { sig_level = value; }
-        }
-        private float code_phase = 0;
+        public float CodePhase { get; set; }
 
-        public float CodePhase
-        {
-            get { return code_phase; }
-            set { code_phase = value; }
-        }
-        private float doppler = 0;
+        public float Doppler { get; set; }
 
-        public float Doppler
-        {
-            get { return doppler; }
-            set { doppler = value; }
-        }
-        private double raw_time = 0;
-
-        public double RawTime
-        {
-            get { return raw_time; }
-            set { raw_time = value; }
-        }
+        public double RawTime { get; set; }
 
         #endregion
 
         #region Report Packet 0x5B (Satellite Ephemeris Status Report)
 
-        private float collection_time = 0;
         /// <summary>
         /// GPS time (in secs) when Ephemeris data is collected from the satellite
         /// </summary>
-        public float CollectionTime
-        {
-            get { return collection_time; }
-            set { collection_time = value; }
-        }
-        private byte eph_health = 0;
+        public float CollectionTime { get; set; }
+
         /// <summary>
         /// The 6-bit ephemeris health
         /// </summary>
-        public byte EphemerisHealth
-        {
-            get { return eph_health; }
-            set { eph_health = value; }
-        }
-        private byte iode = 0;
+        public byte EphemerisHealth { get; set; }
 
         /// <summary>
         /// Issue of Data Ephemeris. (See the U.S. Government document ICD-GPS-200)
         /// </summary>
-        public byte IODE
-        {
-            get { return iode; }
-            set { iode = value; }
-        }
-        private float toe = 0;
+        public byte IODE { get; set; }
 
         /// <summary>
         /// Toe in secs, (See the U.S. Government document ICD-GPS-200)
         /// </summary>
-        public float Toe
-        {
-            get { return toe; }
-            set { toe = value; }
-        }
-        private byte fit_interval_flag = 0;
+        public float Toe { get; set; }
 
         /// <summary>
         /// See the U.S. Government document ICD-GPS-200
         /// </summary>
-        public byte FitIntervalFlag
-        {
-            get { return fit_interval_flag; }
-            set { fit_interval_flag = value; }
-        }
-        private float user_range_accuracy = 0;
+        public byte FitIntervalFlag { get; set; }
 
         /// <summary>
         /// User Range Accuracy of satellite, converted to meters from the 4-bit code 
         /// described in ICD-GPS-200
         /// </summary>
-        public float UserRangeAccuracy
-        {
-            get { return user_range_accuracy; }
-            set { user_range_accuracy = value; }
-        }
+        public float UserRangeAccuracy { get; set; }
 
         #endregion
 
         #region Report Packet 0x5C (Satellite Tracking Status Report)
 
-        private byte slot = 0;
-
         /// <summary>
         /// Internal code assigned to the hardware slot used to track the specified satellite. 
         /// Slot encoding is generally not used in modern receviers. 
         /// </summary>
-        public byte Slot
-        {
-            get { return slot; }
-            set { slot = value; }
-        }
-        private byte chan = 0;
+        public byte Slot { get; set; }
 
         /// <summary>
         /// Internal code assigned to the hardware channel used to track the specified satellite. For
         /// parallel tracking receivers (which includes most modern receivers), no sequencing of satellites is
         /// done and only one satellite is assigned to a hardware channel. 
         /// </summary>
-        public byte Channel
-        {
-            get { return chan; }
-            set { chan = value; }
-        }
-        private byte acq_flag = 0;
+        public byte Channel { get; set; }
 
         /// <summary>
         /// Signal acquisition (lock) state of the satellite:
@@ -195,12 +148,7 @@ namespace TrimbleMonitor.Thunderbolt
         /// 2 Re-opened search
         /// 3 Ephemeris Flag BYTE flag Status of Ephemeris received
         /// </summary>
-        public byte AcquisitionFlag
-        {
-            get { return acq_flag; }
-            set { acq_flag = value; }
-        }
-        private byte eph_flag = 0;
+        public byte AcquisitionFlag { get; set; }
 
         /// <summary>
         /// Status of Ephemeris received from specified satellite:
@@ -211,55 +159,30 @@ namespace TrimbleMonitor.Thunderbolt
         /// Note that some receivers use a value of 33 to indicate that the received ephemeris 
         /// was not healthy.
         /// </summary>
-        public byte EphemerisFlag
-        {
-            get { return eph_flag; }
-            set { eph_flag = value; }
-        }
-        private float time_of_week = 0;
+        public byte EphemerisFlag { get; set; }
 
         /// <summary>
         /// GPS Time of Last Measurement:
         /// less than 0: No measurements taken
         /// greater or equal to 0: Center of last measurement dwell taken from this satellite
         /// </summary>
-        public float TimeOfWeek
-        {
-            get { return time_of_week; }
-            set { time_of_week = value; }
-        }
-        private float azimuth = 0;
+        public float TimeOfWeek { get; set; }
 
         /// <summary>
         /// Approximate Azimuth angle of satellite (in radians)
         /// </summary>
-        public float Azimuth
-        {
-            get { return azimuth; }
-            set { azimuth = value; }
-        }
-        private float elevation = 0;
+        public float Azimuth { get; set; }
 
         /// <summary>
         /// Approximate Elevation angle of satellite (in radians)
         /// </summary>
-        public float Elevation
-        {
-            get { return elevation; }
-            set { elevation = value; }
-        }
-        private byte age = 0;
+        public float Elevation { get; set; }
 
         /// <summary>
         /// 0 Flag not set, measurement is new
         /// other Measurement too old to be considered for position solutions
         /// </summary>
-        public byte Age
-        {
-            get { return age; }
-            set { age = value; }
-        }
-        private byte msec = 0;
+        public byte Age { get; set; }
 
         /// <summary>
         /// Status of the integer millisecond range to the specified satellite:
@@ -269,12 +192,7 @@ namespace TrimbleMonitor.Thunderbolt
         /// 3 Verified by a successful position fix
         /// 4 Suspected msec error
         /// </summary>
-        public byte MsecStatus
-        {
-            get { return msec; }
-            set { msec = value; }
-        }
-        private byte bad_flag = 0;
+        public byte MsecStatus { get; set; }
 
         /// <summary>
         /// Current health status of the data:
@@ -282,74 +200,76 @@ namespace TrimbleMonitor.Thunderbolt
         /// 1 Bad parity
         /// 2 Bad ephemeris health
         /// </summary>
-        public byte BadDataFlag
-        {
-            get { return bad_flag; }
-            set { bad_flag = value; }
-        }
-        private byte collecting = 0;
+        public byte BadDataFlag { get; set; }
 
         /// <summary>
         /// Receiver is collecting data from satellite:
         /// 0 Not collecting data
         /// non-zero Collecting data
         /// </summary>
-        public byte CollectingData
-        {
-            get { return collecting; }
-            set { collecting = value; }
-        }
+        public byte CollectingData { get; set; }
+
         #endregion
 
         #region Report Packet 0x6D (All In-View Satellite Selection Report)
 
-        private bool tracked = false;            // 6D
-        private bool used_in_fix = false;
-
         /// <summary>
         /// True if this satellite is being used by the receiver to determine the current fix.
         /// </summary>
-        public bool UsedInFix
-        {
-            get { return used_in_fix; }
-            set { used_in_fix = value; }
-        }
+        public bool UsedInFix { get; set; }
 
         /// <summary>
         /// True if this satellite is being tracked by the receiver.
         /// </summary>
-        public bool Tracked
-        {
-            get { return tracked; }
-            set { tracked = value; }
-        }
+        public bool Tracked { get; set; }
 
         #endregion
 
         #region Report Packet 0x8F.A7 (Satellite Solutions)
 
-        private float sat_bias = 0;          // 8F.A7
+        public float SatBias { get; set; }
 
-        public float SatBias
-        {
-            get { return sat_bias; }
-            set { sat_bias = value; }
-        }
-        private float time_of_fix = 0;
+        public float TimeOfFix { get; set; }
 
-        public float TimeOfFix
-        {
-            get { return time_of_fix; }
-            set { time_of_fix = value; }
-        }
-        private bool last_bias_msg = false;     // flag set if sat info was from last message
-
-        public bool HasBiasInfo
-        {
-            get { return last_bias_msg; }
-            set { last_bias_msg = value; }
-        }
+        public bool HasBiasInfo { get; set; }
 
         #endregion
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("=========");
+            sb.AppendLine("HasBiasInfo: " + HasBiasInfo);
+            sb.AppendLine("TimeOfFix: " + TimeOfFix);
+            sb.AppendLine("SatBias: " + SatBias);
+            sb.AppendLine("Tracked: " + Tracked);
+            sb.AppendLine("UsedInFix: " + UsedInFix);
+            sb.AppendLine("CollectingData: " + CollectingData);
+            sb.AppendLine("BadDataFlag: " + BadDataFlag);
+            sb.AppendLine("MsecStatus: " + MsecStatus);
+            sb.AppendLine("Age: " + Age);
+            sb.AppendLine("Elevation: " + Elevation);
+            sb.AppendLine("Azimuth: " + Azimuth);
+            sb.AppendLine("TimeOfWeek: " + TimeOfWeek);
+            sb.AppendLine("EphemerisFlag: " + EphemerisFlag);
+            sb.AppendLine("AcquisitionFlag: " + AcquisitionFlag);
+            sb.AppendLine("Channel: " + Channel);
+            sb.AppendLine("Slot: " + Slot);
+            sb.AppendLine("UserRangeAccuracy: " + UserRangeAccuracy);
+            sb.AppendLine("FitIntervalFlag: " + FitIntervalFlag);
+            sb.AppendLine("Toe: " + Toe);
+            sb.AppendLine("IODE: " + IODE);
+            sb.AppendLine("EphemerisHealth: " + EphemerisHealth);
+            sb.AppendLine("CollectionTime: " + CollectionTime);
+            sb.AppendLine("RawTime: " + RawTime);
+            sb.AppendLine("Doppler: " + Doppler);
+            sb.AppendLine("CodePhase: " + CodePhase);
+            sb.AppendLine("SignalLevel: " + SignalLevel);
+            sb.AppendLine("SampleLength: " + SampleLength);
+            sb.AppendLine("ForcedHealthy: " + ForcedHealthy);
+            sb.AppendLine("Disabled: " + Disabled);
+            sb.AppendLine("=========");
+            return sb.ToString();
+        }
     }
 }

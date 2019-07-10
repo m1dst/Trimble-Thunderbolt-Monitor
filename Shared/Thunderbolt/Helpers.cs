@@ -6,7 +6,7 @@ namespace TrimbleMonitor.Thunderbolt
     public static class Helpers
     {
 
-        static public FixMode ByteToFixMode(byte b)
+        public static FixMode ByteToFixMode(byte b)
         {
             if (b == 0)
                 return FixMode.Auto;
@@ -14,7 +14,7 @@ namespace TrimbleMonitor.Thunderbolt
                 return FixMode.Manual;
         }
 
-        static public FixDimension ByteToFixDimension(byte b)
+        public static FixDimension ByteToFixDimension(byte b)
         {
             if (b == 1)
                 return FixDimension.Clock_1D;
@@ -28,7 +28,7 @@ namespace TrimbleMonitor.Thunderbolt
                 return FixDimension.None;
         }
 
-        static public FixPrecision FloatToFixPrecision(Single s)
+        public static FixPrecision FloatToFixPrecision(Single s)
         {
             if (s == 1.0F)
                 return FixPrecision.Ideal;
@@ -42,6 +42,24 @@ namespace TrimbleMonitor.Thunderbolt
                 return FixPrecision.Fair;
             else
                 return FixPrecision.Poor;
+        }
+
+        public static string FloatToFixPrecisionString(Single s)
+        {
+            if (s == 0)
+                return "";
+            else if (s == 1.0F)
+                return "Ideal";
+            else if (s <= 2.0F)
+                return "Great";
+            else if (s <= 5.0F)
+                return "Good";
+            else if (s <= 10.0F)
+                return "Moderate";
+            else if (s <= 20.0F)
+                return "Fair";
+            else
+                return "Poor";
         }
 
 

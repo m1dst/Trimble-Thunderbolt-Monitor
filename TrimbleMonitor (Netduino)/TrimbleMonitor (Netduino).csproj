@@ -35,6 +35,12 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="..\Shared\DoubleExtensions.cs">
+      <Link>DoubleExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\FloatExtensions.cs">
+      <Link>FloatExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Lcd\DfRobotLcdShield.cs">
       <Link>Lcd\DfRobotLcdShield.cs</Link>
     </Compile>

@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;NTP,NETDUINO,TRACE,MF_FRAMEWORK_VERSION_V4_3</DefineConstants>
+    <DefineConstants>DEBUG;NTP,NETDUINO,TRACE,MF_FRAMEWORK_VERSION_V4_3,MF_FRAMEWORK_VERSION_V4_2</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -35,6 +35,9 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="..\Shared\FloatExtensions.cs">
+      <Link>FloatExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Lcd\DfRobotLcdShield.cs">
       <Link>Lcd\DfRobotLcdShield.cs</Link>
     </Compile>
@@ -76,6 +79,9 @@
     </Compile>
     <Compile Include="..\Shared\StringExtension.cs">
       <Link>StringExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\DoubleExtensions.cs">
+      <Link>DoubleExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Thunderbolt\BitConverter.cs">
       <Link>Thunderbolt\BitConverter.cs</Link>

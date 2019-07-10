@@ -5,17 +5,18 @@ using SecretLabs.NETMF.Hardware.Netduino;
 #endif
 
 using System.Threading;
-using Microsoft.SPOT;
 
 namespace MicroLiquidCrystal
 {
     public class DfRobotLcdShield : Lcd
     {
 
-        readonly AnalogInput analog;
+        readonly AnalogInput _analog;
 
         public delegate void ButtonPressHandler(object sender, Buttons buttonPressed);
         public event ButtonPressHandler OnButtonPressed;
+
+        #region Modern Netduino
 
         const int KEY_UP = 600;
         const int KEY_DOWN = 1500;
@@ -23,6 +24,19 @@ namespace MicroLiquidCrystal
         const int KEY_CMD2 = 100;
         const int KEY_CMD3 = 3000;
         const int KEY_NONE = 4000;
+
+        #endregion
+
+        #region Netduino Gen1
+
+        //const int KEY_UP = 200;
+        //const int KEY_DOWN = 400;
+        //const int KEY_CMD1 = 600;
+        //const int KEY_CMD2 = 100;
+        //const int KEY_CMD3 = 800;
+        //const int KEY_NONE = 1000;
+
+        #endregion
 
         private const int DEBOUNCE = 50;
 
@@ -49,14 +63,14 @@ namespace MicroLiquidCrystal
         {
 
 #if (NETDUINO)
-            analog = new AnalogInput(AnalogChannels.ANALOG_PIN_A0);
+            _analog = new AnalogInput(AnalogChannels.ANALOG_PIN_A0);
 #endif
 #if (FEZLEMUR)
-            analog = new AnalogInput(GHI.Pins.FEZLemur.AnalogInput.A0);
+            _analog = new AnalogInput(GHI.Pins.FEZLemur.AnalogInput.A0);
 #endif
 
-            this.Begin(columns, rows);
-            this.Clear();
+            Begin(columns, rows);
+            Clear();
 
             var buttonReader = new Thread(new ThreadStart(ReadButtons));
             buttonReader.Start();
@@ -97,7 +111,7 @@ namespace MicroLiquidCrystal
         {
             get
             {
-                double adcRaw = analog.ReadRaw();
+                double adcRaw = _analog.ReadRaw();
                 //Debug.Print(adcRaw.ToString());
                 if (adcRaw > KEY_NONE) return Buttons.None;
                 if (adcRaw < KEY_CMD2) return Buttons.Command2;

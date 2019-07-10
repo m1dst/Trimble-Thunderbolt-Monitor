@@ -1,17 +1,16 @@
 using System;
-using Microsoft.SPOT;
 
 namespace TrimbleMonitor
 {
     public static class StringExtension
     {
 
-        public static string PadLeft(string text, int totalWidth)
+        public static string PadLeft(this string text, int totalWidth)
         {
             return PadLeft(text, totalWidth, ' ');
         }
 
-        public static string PadLeft(string text, int totalWidth, char paddingChar)
+        public static string PadLeft(this string text, int totalWidth, char paddingChar)
         {
             if (totalWidth < 0)
                 throw new ArgumentOutOfRangeException("totalWidth", "< 0");
@@ -30,12 +29,12 @@ namespace TrimbleMonitor
         }
 
 
-        public static string PadRight(string text, int totalWidth)
+        public static string PadRight(this string text, int totalWidth)
         {
             return PadRight(text, totalWidth, ' ');
         }
 
-        public static string PadRight(string text, int totalWidth, char paddingChar)
+        public static string PadRight(this string text, int totalWidth, char paddingChar)
         {
             if (totalWidth < 0)
                 throw new ArgumentOutOfRangeException("totalWidth", "< 0");
@@ -47,7 +46,7 @@ namespace TrimbleMonitor
 
             while (totalWidth > text.Length)
             {
-                text = text + paddingChar;
+                text += paddingChar;
             }
 
             return text;
