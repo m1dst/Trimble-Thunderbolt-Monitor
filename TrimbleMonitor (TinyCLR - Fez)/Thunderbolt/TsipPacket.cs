@@ -55,10 +55,9 @@ namespace TrimbleMonitor.Thunderbolt
         /// <returns></returns>
         public override string ToString()
         {
-            var st = StringFormat("TSIP PACKET: Status={2} Code=0x{1:X2} Length={0} Counter={3} Buffer=:", new object[] { _length, PacketType, _status, _counter });
-
+            var st = StringFormat("TSIP PACKET: Status={2} Code=0x{1} Length={0} Counter={3} Buffer=:", new object[] { _length, Helpers.ByteToHex(PacketType), _status, _counter });
             for (var x = 0; x < _length; x++)
-                st += _packetData[x].ToString("X2");
+                st += Helpers.ByteToHex(_packetData[x]);
             return st;
         }
 

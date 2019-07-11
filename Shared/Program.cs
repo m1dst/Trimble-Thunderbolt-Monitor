@@ -171,6 +171,7 @@ namespace TrimbleMonitor
                 // When we receive a time packet, request the satellite statuses.
                 // This is just a simple way to regulate/throttle the requests.
                 _thunderbolt.RequestSatelliteList();
+                _thunderbolt.RequestTrackedSatelliteStatus();
                 _thunderbolt.RequestSatelliteSignalLevels();
             }
         }

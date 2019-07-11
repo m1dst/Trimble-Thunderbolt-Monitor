@@ -61,7 +61,11 @@ namespace TrimbleMonitor.Thunderbolt
                 return "Poor";
         }
 
-
+        public static string ByteToHex(byte val)
+        {
+            const string hex = "0123456789ABCDEF";
+            return new string(new[] { hex[(val & 0xf0) >> 4], hex[val & 0x0f] });
+        }
 
     }
 }

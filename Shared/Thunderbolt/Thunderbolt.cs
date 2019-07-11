@@ -1735,6 +1735,7 @@ namespace TrimbleMonitor.Thunderbolt
         private void receive_sig_levels(TsipPacket tp)
         {
             Debug.Print(":0x47    (Signal Levels for All Tracked Satellites Report)");
+            //Debug.WriteLine(tp.ToString());
 
             clear_sat_tracking();
 
