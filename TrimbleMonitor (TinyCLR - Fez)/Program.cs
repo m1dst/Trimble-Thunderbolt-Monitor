@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Threading;
 using GHIElectronics.TinyCLR.Devices.Gpio;
@@ -143,7 +143,6 @@ namespace TrimbleMonitor.TinyCLR.Fez
                 // This is just a simple way to regulate/throttle the requests.
                 _thunderbolt.RequestSatelliteList();
                 _thunderbolt.RequestTrackedSatelliteStatus();
-                _thunderbolt.RequestSatelliteSignalLevels();
             }
         }
 
@@ -211,7 +210,7 @@ namespace TrimbleMonitor.TinyCLR.Fez
             _lcdShield.WriteLine(0, "Trimble Thunderbolt", TextAlign.Centre);
             _lcdShield.WriteLine(1, "Monitor (M1DST)", TextAlign.Centre);
             _lcdShield.WriteLine(2, "www.m1dst.co.uk", TextAlign.Centre);
-            _lcdShield.WriteLine(3, "Ver: 2.0.0 (TinyCLR)", TextAlign.Centre);
+            _lcdShield.WriteLine(3, "Ver: 2.0.1 (TinyCLR)", TextAlign.Centre);
         }
 
         static void DisplayVersion()
@@ -387,12 +386,16 @@ namespace TrimbleMonitor.TinyCLR.Fez
             var numberOfSatsUsedInFix = 0;
             var numberOfSatsTracked = 0;
 
-            foreach (var satellite in _thunderbolt.Satellites)
+            for (var i = 0; i < _thunderbolt.Satellites.Length; i++)
             {
+                var satellite = _thunderbolt.Satellites[i];
+                //Debug.WriteLine(satellite.ToString());
 
-                // Only display information for satellites which have a channel number assigned.
-                if (satellite.Tracked && satellite.CollectingData > 0)
+                // Only display information for tracked satellites.
+                if (satellite.Tracked || satellite.SignalLevel > 0)
                 {
+
+                    Debug.WriteLine("Signal Levels - PRN:" + (i + 1) + " CH:" + satellite.Channel + " AMU:" + satellite.SignalLevel);
 
                     numberOfSatsTracked++;
 
@@ -421,9 +424,8 @@ namespace TrimbleMonitor.TinyCLR.Fez
                     // Map the signal level to a number between 0 and 8.
                     if (satellite.SignalLevel >= 0)
                     {
-                        satSignal[satellite.Channel] = (int)Math.Round(satellite.SignalLevel.Map(0, 50, 0, 8));
+                        satSignal[satellite.Channel] = (int) Math.Round(satellite.SignalLevel.Map(0, 50, 0, 8));
                     }
-
                 }
             }
 
@@ -463,15 +465,11 @@ namespace TrimbleMonitor.TinyCLR.Fez
             for (var i = 0; i < _thunderbolt.Satellites.Length; i++)
             {
                 var satellite = _thunderbolt.Satellites[i];
+                Debug.WriteLine($"Sat {i+1}" + satellite);
                 if (satellite.Tracked)
                 {
                     _prns[satellite.Channel] = i + 1;
                 }
-            }
-
-            for (var i = 0; i < _prns.Length; i++)
-            {
-                Debug.WriteLine(_prns[i].ToString());
             }
 
             _lcdShield.SetCursorPosition(0, 1);

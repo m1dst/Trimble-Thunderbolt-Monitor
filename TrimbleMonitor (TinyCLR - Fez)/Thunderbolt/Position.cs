@@ -116,16 +116,16 @@ namespace TrimbleMonitor.Thunderbolt
         }
 
         private static float[] PowersOfTen = new float[]
-{
-  1.0f,
-  10.0f,
-  100.0f,
-  1000.0f,
-  10000.0f,
-  100000.0f,
-  1000000.0f,
-  // etc.
-};
+        {
+          1.0f,
+          10.0f,
+          100.0f,
+          1000.0f,
+          10000.0f,
+          100000.0f,
+          1000000.0f,
+          // etc.
+        };
 
         public static double Round(double value, int digits)
         {

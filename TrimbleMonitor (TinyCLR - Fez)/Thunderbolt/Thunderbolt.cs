@@ -1071,9 +1071,11 @@ namespace TrimbleMonitor.Thunderbolt
 
         private void sat_tracking(TsipPacket tp)
         {
-            Debug.WriteLine(":0x5C    (Satellite Tracking)");
+            //Debug.WriteLine(":0x5C    (Satellite Tracking)");
+            //Debug.WriteLine(tp.ToString());
 
             var prn = tp.GetNextByte();
+
             prn--;
             if (prn > 31)
             {
@@ -1094,6 +1096,10 @@ namespace TrimbleMonitor.Thunderbolt
             Satellites[prn].MsecStatus = tp.GetNextByte();
             Satellites[prn].BadDataFlag = tp.GetNextByte();
             Satellites[prn].CollectingData = tp.GetNextByte();
+            Satellites[prn].MillisAtLastUpdate = DateTime.UtcNow.Ticks / 10000;
+
+            Debug.WriteLine(":0x5C    (Satellite Tracking) - PRN:" + (prn + 1) + " CH:" + Satellites[prn].Channel + " AMU:" + Satellites[prn].SignalLevel);
+
         }
 
         private void eeprom_status(TsipPacket tp)
@@ -1712,13 +1718,10 @@ namespace TrimbleMonitor.Thunderbolt
             }
         }
 
-
         private void receive_sig_levels(TsipPacket tp)
         {
             Debug.WriteLine(":0x47    (Signal Levels for All Tracked Satellites Report)");
             //Debug.WriteLine(tp.ToString());
-
-            clear_sat_tracking();
 
             var count = tp.GetNextByte();
             for (var i = 0; i < count; i++)
@@ -1844,6 +1847,24 @@ namespace TrimbleMonitor.Thunderbolt
         /// </summary>
         public void RequestTrackedSatelliteStatus()
         {
+            // Clear out old satellites which have not had their data updated in the last 2000ms.
+            for (var i = 0; i < Satellites.Length; i++)
+            {
+                if (Satellites[i].Tracked && DateTime.UtcNow.Ticks / 10000 - Satellites[i].MillisAtLastUpdate >= 2000)
+                {
+                    Debug.WriteLine($"Timed out PRN:{i+1} after 2s.");
+                    Satellites[i].UsedInFix = false;
+                    Satellites[i].SignalLevel = 0;
+                    Satellites[i].CollectingData = 0;
+                }
+
+                if (Satellites[i].Tracked && DateTime.UtcNow.Ticks / 10000 - Satellites[i].MillisAtLastUpdate >= 10000)
+                {
+                    Debug.WriteLine($"Timed out PRN:{i+1} after 10s.");
+                    Satellites[i].Tracked = false;
+                }
+            }
+
             request_sat_status(0x00); // 0x00 == all tracked sats
         }
 

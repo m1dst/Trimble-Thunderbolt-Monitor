@@ -172,7 +172,6 @@ namespace TrimbleMonitor
                 // This is just a simple way to regulate/throttle the requests.
                 _thunderbolt.RequestSatelliteList();
                 _thunderbolt.RequestTrackedSatelliteStatus();
-                _thunderbolt.RequestSatelliteSignalLevels();
             }
         }
 
@@ -240,7 +239,7 @@ namespace TrimbleMonitor
             _lcdShield.WriteLine(0, "Trimble Thunderbolt", TextAlign.Centre);
             _lcdShield.WriteLine(1, "Monitor (M1DST)", TextAlign.Centre);
             _lcdShield.WriteLine(2, "www.m1dst.co.uk", TextAlign.Centre);
-            _lcdShield.WriteLine(3, "Version 1.1.0", TextAlign.Centre);
+            _lcdShield.WriteLine(3, "Version 1.1.1", TextAlign.Centre);
         }
 
         static void DisplayVersion()
@@ -418,8 +417,10 @@ namespace TrimbleMonitor
             foreach (var satellite in _thunderbolt.Satellites)
             {
 
-                // Only display information for satellites which have a channel number assigned.
-                if (satellite.Tracked && satellite.CollectingData > 0)
+                //Debug.WriteLine(satellite.ToString());
+
+                // Only display information for tracked satellites.
+                if (satellite.Tracked)
                 {
 
                     numberOfSatsTracked++;
@@ -453,6 +454,7 @@ namespace TrimbleMonitor
                     }
 
                 }
+
             }
 
             var mode = _thunderbolt.TimingMode == TimingModes.UTC ? "U" : "G";
@@ -491,15 +493,11 @@ namespace TrimbleMonitor
             for (var i = 0; i < _thunderbolt.Satellites.Length; i++)
             {
                 var satellite = _thunderbolt.Satellites[i];
+                //Debug.WriteLine($"Sat {i+1}" + satellite);
                 if (satellite.Tracked)
                 {
                     _prns[satellite.Channel] = i + 1;
                 }
-            }
-
-            for (var i = 0; i < _prns.Length; i++)
-            {
-                Debug.Print(_prns[i].ToString());
             }
 
             _lcdShield.SetCursorPosition(0, 1);

@@ -46,13 +46,7 @@ namespace TrimbleMonitor.Thunderbolt
         /// when this data is received from a satellite.
         /// </summary>
 
-        private bool health_flag = false;        // packet 49
-
-        public bool IsHealthy
-        {
-            get => health_flag;
-            set => health_flag = value;
-        }
+        public bool IsHealthy { get; set; } = false;
 
         #endregion
 
@@ -234,6 +228,8 @@ namespace TrimbleMonitor.Thunderbolt
 
         #endregion
 
+        public long MillisAtLastUpdate { get; set; } = 0;
+
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -267,6 +263,8 @@ namespace TrimbleMonitor.Thunderbolt
             sb.AppendLine("SampleLength: " + SampleLength);
             sb.AppendLine("ForcedHealthy: " + ForcedHealthy);
             sb.AppendLine("Disabled: " + Disabled);
+            sb.AppendLine("MillisAtLastUpdate: " + MillisAtLastUpdate);
+            sb.AppendLine("MillisSinceLastUpdate: " + (DateTime.UtcNow.Ticks / 10000 - MillisAtLastUpdate));
             sb.AppendLine("=========");
             return sb.ToString();
         }

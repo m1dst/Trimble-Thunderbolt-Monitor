@@ -282,7 +282,7 @@ namespace MicroLiquidCrystal
             if (row > _numLines)
                 row = _numLines - 1;
             
-            int address = column + RowOffsets[row];
+            var address = column + RowOffsets[row];
             SendCommand((byte) (LCD_SETDDRAMADDR | address));
         }
 
@@ -320,7 +320,7 @@ namespace MicroLiquidCrystal
         /// <param name="text">The string to write.</param>
         public void Write(string text)
         {
-            byte[] buffer = Encoding.GetBytes(text);
+            var buffer = Encoding.GetBytes(text);
             Write(buffer, 0, buffer.Length);
         }
 
@@ -332,8 +332,8 @@ namespace MicroLiquidCrystal
         /// <param name="count">The number of bytes to write.</param>
         public void Write(byte[] buffer, int offset, int count)
         {
-            int len = offset + count;
-            for (int i = offset; i < len; i++)
+            var len = offset + count;
+            for (var i = offset; i < len; i++)
             {
                 WriteByte(buffer[i]);
             }
@@ -373,7 +373,7 @@ namespace MicroLiquidCrystal
         {
             location &= 0x7; // we only have 8 locations 0-7
             SendCommand((byte) (LCD_SETCGRAMADDR | (location << 3)));
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
                 WriteByte(charmap[offset+i]);
             }

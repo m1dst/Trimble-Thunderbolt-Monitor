@@ -81,7 +81,7 @@ namespace TrimbleMonitor.Thunderbolt
         /// <returns>Locator string</returns>
         public static string LatLongToLocator(double Lat, double Long, int Ext)
         {
-            string locator = "";
+            var locator = "";
 
             Lat += 90;
             Long += 180;

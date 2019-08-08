@@ -31,10 +31,10 @@ namespace TrimbleMonitor.Thunderbolt
         private static int _IndexOfEscaped(String S, Char C) { return _IndexOfEscaped(S, C, 0); }
         private static int _IndexOfEscaped(String S, Char C, int Offset)
         {
-            int pos = -1;
-            bool escape = false;
+            var pos = -1;
+            var escape = false;
 
-            for (int x = 0; x < S.Length; x++)
+            for (var x = 0; x < S.Length; x++)
             {
                 if (escape)
                 {
@@ -58,10 +58,10 @@ namespace TrimbleMonitor.Thunderbolt
         private static int _LastIndexOfEscaped(String S, Char C) { return _LastIndexOfEscaped(S, C, 0); }
         private static int _LastIndexOfEscaped(String S, Char C, int Offset)
         {
-            int pos = -1;
-            bool escape = false;
+            var pos = -1;
+            var escape = false;
 
-            for (int x = 0; x < S.Length; x++)
+            for (var x = 0; x < S.Length; x++)
             {
                 if (escape)
                 {
@@ -85,11 +85,11 @@ namespace TrimbleMonitor.Thunderbolt
         // character is after the character to escape
         private static int _ReversedIndexOfEscaped(String S, Char C, int Offset)
         {
-            int pos = -1;
-            bool escape = false;
-            Char C_Next = (char)0;
+            var pos = -1;
+            var escape = false;
+            var C_Next = (char)0;
 
-            for (int x = 0; x < S.Length; x++)
+            for (var x = 0; x < S.Length; x++)
             {
                 if (x < S.Length - 1) { C_Next = S[x + 1]; }
                 if (escape)
@@ -120,8 +120,8 @@ namespace TrimbleMonitor.Thunderbolt
         // Reverse String
         private static String _ReverseString(String S)
         {
-            String reversedS = "";
-            foreach (char c in S)
+            var reversedS = "";
+            foreach (var c in S)
                 reversedS = c + reversedS;
             return reversedS;
         }
@@ -130,8 +130,8 @@ namespace TrimbleMonitor.Thunderbolt
         private static int _intval(String S)
         {
             if (S.Length == 0) return 0;
-            int r = 0;
-            foreach (Char c in S)
+            var r = 0;
+            foreach (var c in S)
             {
                 if ("0123456789".IndexOf(c) != -1)
                 {
@@ -150,16 +150,16 @@ namespace TrimbleMonitor.Thunderbolt
         private static String _formatFractionalPart(String Format, int Number)
         {
             // This will hold the formatted string
-            String S = "";
+            var S = "";
 
             // Make number positive
             if (Number < 0) Number = -Number;
 
             // By converting the number to a string we can easily find the MSD (Most Significant Digit)
-            String NumberAsString = Number.ToString();
+            var NumberAsString = Number.ToString();
 
             // Strip it from zero's
-            for (int x = NumberAsString.Length - 1; x >= 0; x--)
+            for (var x = NumberAsString.Length - 1; x >= 0; x--)
             {
                 if (NumberAsString[x] != '0')
                 {
@@ -168,13 +168,13 @@ namespace TrimbleMonitor.Thunderbolt
                 }
             }
 
-            int NumberAsStringPos = 0;
+            var NumberAsStringPos = 0;
 
             // Check if escaped
-            bool escape = false;
+            var escape = false;
 
             // Go trough format string
-            for (int x = 0; x < Format.Length; x++)
+            for (var x = 0; x < Format.Length; x++)
             {
                 // If last character was an escape character just output it
                 if (escape)
@@ -225,7 +225,7 @@ namespace TrimbleMonitor.Thunderbolt
         // This routine formats the Integer part of a number to it's formatting rules
         private static String _formatIntegerPart(String Format, int Number)
         {
-            int NumberScalingComma = -1;
+            var NumberScalingComma = -1;
 
             // Search for , (Number Scaling Comma)
             NumberScalingComma = _LastIndexOfEscaped(Format, ',');
@@ -236,28 +236,28 @@ namespace TrimbleMonitor.Thunderbolt
             }
 
             // Reverse format string as we work right to left
-            String reversedFormatString = _ReverseString(Format);
+            var reversedFormatString = _ReverseString(Format);
 
 
             // Check if number is negative
-            bool NumberNegative = (Number < 0);
+            var NumberNegative = (Number < 0);
 
             // Internal operator indicating if we should add a +/- for the string start
-            bool DisplayNegative = NumberNegative;
-            bool DisplayPositive = false;
+            var DisplayNegative = NumberNegative;
+            var DisplayPositive = false;
 
             // Make number positive
             if (Number < 0) Number = -Number;
 
             // Storage for formatted string
-            String S = "";
+            var S = "";
 
             // Check if escaped
-            bool escape = false;
-            Char C_Next = (char)0;
+            var escape = false;
+            var C_Next = (char)0;
 
             // Go trough format string
-            for (int x = 0; x < reversedFormatString.Length; x++)
+            for (var x = 0; x < reversedFormatString.Length; x++)
             {
                 // Used for escape checking
                 if (x < reversedFormatString.Length - 1) { C_Next = reversedFormatString[x + 1]; }
@@ -324,9 +324,9 @@ namespace TrimbleMonitor.Thunderbolt
             // Add number group specificier if requested
             if (NumberScalingComma != -1)
             {
-                String S_ = "";
-                int GroupSize = 0;
-                for (int x = S.Length - 1; x >= 0; x--)
+                var S_ = "";
+                var GroupSize = 0;
+                for (var x = S.Length - 1; x >= 0; x--)
                 {
                     // Add grouping symbol when we got a full block
                     if (GroupSize == CULTURE_GROUPSIZE)
@@ -339,8 +339,8 @@ namespace TrimbleMonitor.Thunderbolt
                         else
                         {
                             // Check if there are more Significant digits
-                            bool MoreSignificantDigits = false;
-                            foreach (char c in S.Substring(0, x + 1))
+                            var MoreSignificantDigits = false;
+                            foreach (var c in S.Substring(0, x + 1))
                             {
                                 if ("123456789".IndexOf(c) != -1)
                                 {
@@ -395,10 +395,10 @@ namespace TrimbleMonitor.Thunderbolt
                 return "Infinity";
 
             // String to build formated number
-            String S = "";
+            var S = "";
 
             // Check for percent Symbol
-            int PercentSymbol = _IndexOfEscaped(Format, '%');
+            var PercentSymbol = _IndexOfEscaped(Format, '%');
             if (PercentSymbol != -1)
             {
                 return _formatSection(Format.Substring(0, PercentSymbol), Number * 100) + "%";
@@ -406,13 +406,13 @@ namespace TrimbleMonitor.Thunderbolt
 
 
             // Check for Exponent Symbol
-            int ExponentSymbol = _IndexOfEscaped(Format.ToLower(), 'e');
+            var ExponentSymbol = _IndexOfEscaped(Format.ToLower(), 'e');
             if (ExponentSymbol != -1)
             {
                 // To be a valid exponent format it must be proceeded by 1 or more zeros
                 if (_IndexOfEscaped(Format, '0', ExponentSymbol + 1) != -1)
                 {
-                    int Exponent = 0;
+                    var Exponent = 0;
 
                     // Number = 1
                     if (Number == 1F)
@@ -449,8 +449,8 @@ namespace TrimbleMonitor.Thunderbolt
             if (_IndexOfEscaped(Format, '.') != -1)
             {
                 // Get Integer and Fractional part of number
-                int IntegerPart = (int)System.Math.Floor(Number);
-                int FractionalPart = (int)((Number * 1000000F - (Double)IntegerPart * 1000000F));
+                var IntegerPart = (int)System.Math.Floor(Number);
+                var FractionalPart = (int)((Number * 1000000F - (Double)IntegerPart * 1000000F));
 
                 // Get formatted result for Integer Part
                 S += _formatIntegerPart(Format.Substring(0, _IndexOfEscaped(Format, '.')), IntegerPart);
@@ -474,8 +474,8 @@ namespace TrimbleMonitor.Thunderbolt
         // Convert integer to string
         private static String _FormatAsHex(int Number, int Size)
         {
-            String S = "";
-            bool Negative = (Number < 0);
+            var S = "";
+            var Negative = (Number < 0);
             if (Negative) Number = -Number;
 
             // Build string
@@ -500,8 +500,8 @@ namespace TrimbleMonitor.Thunderbolt
         // Convert integer to string
         private static String _FormatAsDecimal(int Number, int Size)
         {
-            String S = "";
-            bool Negative = (Number < 0);
+            var S = "";
+            var Negative = (Number < 0);
             if (Negative) Number = -Number;
 
             // Build string
@@ -575,12 +575,12 @@ namespace TrimbleMonitor.Thunderbolt
 
 
             // This will hold the found sections
-            String[] Sections = new String[] { "", "", "" };
+            var Sections = new String[] { "", "", "" };
 
             // Used to find sections
-            int SectionCount = 1;
-            int SectionSearchPos1 = 0;
-            int SectionSearchPos2 = 0;
+            var SectionCount = 1;
+            var SectionSearchPos1 = 0;
+            var SectionSearchPos2 = 0;
 
 
             SectionSearchPos1 = _IndexOfEscaped(Format, ';');

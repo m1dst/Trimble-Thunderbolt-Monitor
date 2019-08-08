@@ -235,6 +235,8 @@ namespace TrimbleMonitor.Thunderbolt
 
         #endregion
 
+        public long MillisAtLastUpdate { get; set; }
+
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -268,6 +270,8 @@ namespace TrimbleMonitor.Thunderbolt
             sb.AppendLine("SampleLength: " + SampleLength);
             sb.AppendLine("ForcedHealthy: " + ForcedHealthy);
             sb.AppendLine("Disabled: " + Disabled);
+            sb.AppendLine("MillisAtLastUpdate: " + MillisAtLastUpdate);
+            sb.AppendLine("MillisSinceLastUpdate: " + (DateTime.UtcNow.Ticks / 10000 - MillisAtLastUpdate));
             sb.AppendLine("=========");
             return sb.ToString();
         }

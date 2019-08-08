@@ -65,7 +65,7 @@ namespace MicroLiquidCrystal
 
             var dataPins = new[] { d0, d1, d2, d3, d4, d5, d6, d7};
             _dataPorts = new OutputPort[8];
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
                 if (dataPins[i] != Cpu.Pin.GPIO_NONE)
                     _dataPorts[i] = new OutputPort(dataPins[i], false);
@@ -90,7 +90,7 @@ namespace MicroLiquidCrystal
                 _rwPort.Dispose();
                 _enablePort.Dispose();
 
-                for (int i = 0; i < 8; i++)
+                for (var i = 0; i < 8; i++)
                 {
                     if (_dataPorts[i] != null)
                         _dataPorts[i].Dispose();
@@ -143,7 +143,7 @@ namespace MicroLiquidCrystal
 
         private void Write8Bits(byte value)
         {
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
                 _dataPorts[i].Write(((value >> i) & 0x01) == 0x01);
             }
@@ -153,7 +153,7 @@ namespace MicroLiquidCrystal
 
         private void Write4Bits(byte value)
         {
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 _dataPorts[4+i].Write(((value >> i) & 0x01) == 0x01);
             }

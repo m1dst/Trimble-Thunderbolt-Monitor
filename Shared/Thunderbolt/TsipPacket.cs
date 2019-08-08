@@ -147,7 +147,7 @@ namespace TrimbleMonitor.Thunderbolt
         public String GetNextString()
         {
             var asciiString = new StringBuilder();
-            byte len = this._packetData[_counter++];               // length of the string
+            var len = this._packetData[_counter++];               // length of the string
             for (var i = 0; i < len; i++)
                 asciiString.Append(this._packetData[_counter++]); // append ascii bytes
             return asciiString.ToString();
