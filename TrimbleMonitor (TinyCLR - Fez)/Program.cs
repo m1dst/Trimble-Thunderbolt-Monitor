@@ -465,7 +465,7 @@ namespace TrimbleMonitor.TinyCLR.Fez
             for (var i = 0; i < _thunderbolt.Satellites.Length; i++)
             {
                 var satellite = _thunderbolt.Satellites[i];
-                Debug.WriteLine($"Sat {i+1}" + satellite);
+                //Debug.WriteLine($"Sat {i+1}" + satellite);
                 if (satellite.Tracked)
                 {
                     _prns[satellite.Channel] = i + 1;
