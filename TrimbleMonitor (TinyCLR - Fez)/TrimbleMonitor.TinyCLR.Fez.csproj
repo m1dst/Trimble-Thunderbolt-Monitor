@@ -66,6 +66,7 @@
     <Compile Include="Thunderbolt\Thunderbolt.cs" />
     <Compile Include="Thunderbolt\TsipPacket.cs" />
     <Compile Include="Thunderbolt\VersionInfo.cs" />
+    <Compile Include="Watchdog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

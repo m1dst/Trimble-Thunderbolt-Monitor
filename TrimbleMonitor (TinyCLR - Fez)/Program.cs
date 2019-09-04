@@ -30,6 +30,8 @@ namespace TrimbleMonitor.TinyCLR.Fez
         public static void Main()
         {
 
+            WatchDog.Start(new TimeSpan(0, 0, 30));
+
             MinorLed.SetDriveMode(GpioPinDriveMode.Output);
             MajorLed.SetDriveMode(GpioPinDriveMode.Output);
 
@@ -78,6 +80,7 @@ namespace TrimbleMonitor.TinyCLR.Fez
 
             while (true)
             {
+                WatchDog.Reset();
                 if (_thunderbolt.IsSerialDataBeingReceived)
                 {
 
@@ -210,7 +213,7 @@ namespace TrimbleMonitor.TinyCLR.Fez
             _lcdShield.WriteLine(0, "Trimble Thunderbolt", TextAlign.Centre);
             _lcdShield.WriteLine(1, "Monitor (M1DST)", TextAlign.Centre);
             _lcdShield.WriteLine(2, "www.m1dst.co.uk", TextAlign.Centre);
-            _lcdShield.WriteLine(3, "Ver: 2.0.1 (TinyCLR)", TextAlign.Centre);
+            _lcdShield.WriteLine(3, "Ver: 2.0.2 (TinyCLR)", TextAlign.Centre);
         }
 
         static void DisplayVersion()
