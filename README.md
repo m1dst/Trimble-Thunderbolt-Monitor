@@ -1,4 +1,6 @@
-**ATTENTION: We now support TinyCLR and as such the cheap GHI Fez which only costs $10 **
+**ATTENTION: We now support TinyCLR and as such the cheap GHI Fez which only costs $10**
+
+If you are reading this for the first time and have not purchased a microcontroller yet, I suggest you use TinyCLR and the GHI Fez as the other boards are becomming more expensive and use the older NETMF.  Many suppliers have this board and an example supplier is [Mouser](https://www.mouser.co.uk/ProductDetail/GHI-Electronics/FEZT18-N?qs=sGAEpiMZZMtw0nEwywcFgJjuZv55GFNmNKbu%252BRrm76w%252B85tivhIL1w%3D%3D).  This will be the easiest way for you to run this project although the documentation I provide has yet to be updated so you will need to check out the ["getting started" guide](https://docs.ghielectronics.com/software/tinyclr/getting-started.html) on how to setup the environment for flashing the board.
 
 **If you don't know how to use GitHub and just want to download the latest development code, visit [https://github.com/m1dst/Trimble-Thunderbolt-Monitor/archive/master.zip](https://github.com/m1dst/Trimble-Thunderbolt-Monitor/archive/master.zip).  You can always redownload the latest version with this link.  If you want an official releases, click the [releases link](https://github.com/m1dst/Trimble-Thunderbolt-Monitor/releases).**
 
